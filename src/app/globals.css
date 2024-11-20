@@ -2,3 +2,18 @@
 @tailwind components;
 @tailwind utilities;
 
+.input {
+  @apply border my-3 p-2 rounded border-purple-500 active:border-purple-500 focus:border-purple-500
+}
+
+.li {
+  @apply py-3 text-gray-700
+}
+
+#title {
+  @apply font-semibold
+}
+
+.hover-effect {
+  @apply transition duration-300 ease-out;
+}
