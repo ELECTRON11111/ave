@@ -71,6 +71,7 @@ export default function Signup():any {
             }, {
                 headers: {
                     'Content-Type': 'application/json',
+                    "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`
                 },
             });
             console.log(response);

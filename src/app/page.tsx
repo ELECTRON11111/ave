@@ -53,84 +53,90 @@ export default function Home () {
     updateLoading(true);
     let token = "";
     try {
-        const response = await axios.post(`${baseUrl}/auth/token/`, {
-            "username": formData.email,
-            "password": formData.password,
-        },
-        {
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        });
-        updateLoading(false);
-        
-        // update token variable
-        if (typeof response !== 'undefined') {
-            token = response.data.access_token;
-        } else {
-            updateError({state: true, message: "Network Error. Please check your connection and try again."});    
-        }
-        
-        // decode the token to determine user role and dynamically route them
-        const decoded:any = jwtDecode(token);
+      const response = await axios.post(`${baseUrl}/auth/token/`, {
+          "username": formData.email,
+          "password": formData.password,
+      },
+      {
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+            "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`
+          }
+      });
+      updateLoading(false);
+      
+      // update token variable
+      if (typeof response !== 'undefined') {
+          token = response.data.access_token;
+      } else {
+          updateError({state: true, message: "Network Error. Please check your connection and try again."});    
+      }
+      
+      // decode the token to determine user role and dynamically route them
+      const decoded:any = jwtDecode(token);
 
-        // Save JWT token to local storage
-        
-        // Dynamically route the user based on their role
-        // router.push(`/${decoded.role}_dashboard/`);
+      // Save JWT token to local storage
+      if (decoded.role == "student") {
+        localStorage.setItem("student_token", response.data.access_token); // type "bearer"
+      } else {
+        localStorage.setItem("token", response.data.access_token); // type "bearer"
+      }
+      
+      // Dynamically route the user based on their role
+      router.push(`/${decoded.role}_dashboard/`);
     } catch (error:any) {
-        updateLoading(false);
-        if (error.response.data){
-            updateError({state: true, message: error.response.data.detail});
-        } else {
-            console.log(error);
+      updateLoading(false);
+      if (error.response.data){
+        updateError({state: true, message: error.response.data.detail});
+      } else {
+        console.log(error);
 
-            // Show Alert component
-            updateShowAlert(true);
-            updateAlertMessage("An error occured. Please try again.");
-        }
+        // Show Alert component
+        updateShowAlert(true);
+        updateAlertMessage("An error occured. Please try again.");
+      }
     }
   }
 
     const handleChange = (event: any) => {
-        event.persist();
-        const { name, value, type, checked } = event.target;
+      event.persist();
+      const { name, value, type, checked } = event.target;
 
-        // Take previous state and update only the input field changed.
-        updateFormData(prevState => ({
-            ...prevState,
-            [name]: type === "checkbox"? checked: value
-        }));
+      // Take previous state and update only the input field changed.
+      updateFormData(prevState => ({
+          ...prevState,
+          [name]: type === "checkbox"? checked: value
+      }));
     }
 
     return (
       <div id="login" className="w-full bg-white p-4 py-8 md:flex md:flex-col md:justify-center md:px-60 md:pb-16">
-          <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(prev => !prev); router.push("/#login")}}/>
-          <div id="head" className="my-8">
-            <h1 className="my-2 text-3xl md:text-center">Login to AVE.</h1>
-            <h1 className="text-purple-600 md:text-center">Enter your Login details.</h1>
-            <div id="links" className="m-4 flex justify-around">
-                <span className={`border-b-2 p-2 cursor-pointer select-none ${isStudent? "border-b-purple-500": ""}`} onClick={() => changeIsStudent(true)}>Student</span>
-                <span className={`border-b-2 p-2 cursor-pointer select-none ${!isStudent? "border-b-purple-500": ""}`} onClick={() => changeIsStudent(false)}>Admin (Lecturer)</span>
-            </div>
+        <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(prev => !prev); router.push("/#login")}}/>
+        <div id="head" className="my-8">
+          <h1 className="my-2 text-3xl md:text-center">Login to AVE.</h1>
+          <h1 className="text-purple-600 md:text-center">Enter your Login details.</h1>
+          <div id="links" className="m-4 flex justify-around">
+              <span className={`border-b-2 p-2 cursor-pointer select-none ${isStudent? "border-b-purple-500": ""}`} onClick={() => changeIsStudent(true)}>Student</span>
+              <span className={`border-b-2 p-2 cursor-pointer select-none ${!isStudent? "border-b-purple-500": ""}`} onClick={() => changeIsStudent(false)}>Admin (Lecturer)</span>
           </div>
+        </div>
+        
+        <form action="#" className="flex flex-col justify-around" onSubmit={(e) => e.preventDefault()}>
+          <input name='email' className="input" onChange={(e) => handleChange(e)} placeholder={`Enter ${isStudent? "Student Email or Matric Number": "Admin Email or ID Number" }`} />
+          <input type="password" name='password' className="input" onChange={(e) => handleChange(e)} placeholder="Password" />
           
-          <form action="#" className="flex flex-col justify-around" onSubmit={(e) => e.preventDefault()}>
-            <input name='email' className="input" onChange={(e) => handleChange(e)} placeholder={`Enter ${isStudent? "Student Email or Matric Number": "Admin Email or ID Number" }`} />
-            <input type="password" name='password' className="input" onChange={(e) => handleChange(e)} placeholder="Password" />
-            
-            {error.state? <p className='text-red-500'>{error.message}</p>: ""}
-            
-            <button 
-                type="submit" 
-                onClick={sendFormData}
-                className="my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg"
-            >
-                {loading? Spinner: "Submit"}
-            </button>
-          </form>
+          {error.state? <p className='text-red-500'>{error.message}</p>: ""}
+          
+          <button 
+              type="submit" 
+              onClick={sendFormData}
+              className="my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg"
+          >
+              {loading? Spinner: "Submit"}
+          </button>
+        </form>
 
-          <p className="my-2 text-md">Don&apos;t have an account? <Link href={"/signup"} className="font-light underline">   Sign Up</Link></p>
+        <p className="my-2 text-md">Don&apos;t have an account? <Link href={"/signup"} className="font-light underline">   Sign Up</Link></p>
       </div>
-  )
+    )
 }
