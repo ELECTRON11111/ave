@@ -60,6 +60,14 @@ export default function Signup():any {
         // Check if token is ready and move to respective dashboards
     }, [])
 
+    useEffect(() => {
+        const admin_token = localStorage.getItem("admin_token");
+        const student_token = localStorage.getItem("student_token");
+        // console.log(admin_token, student_token);
+
+        if (admin_token || student_token) router.replace(`${admin_token? "/dashboard/admin": "/dashboard/student"}`);
+    });
+
     const sendFormData =  async () => {
         try {
             const response = await axios.post(`${baseUrl}/auth/create_user/`, {

@@ -53,7 +53,13 @@ const Page = () => {
     )
     
     useEffect(() => {
-        
+        const token:any = localStorage.getItem('student_token');
+        if (token == null) {
+            router.push("/#login");
+        } else {
+            setJwtToken(token);
+            setDecodedToken(jwtDecode(token));
+        }
 
         // Get user location
         if ('geolocation' in navigator) {
@@ -285,7 +291,7 @@ const Page = () => {
             {/* LOGOUT MODAL */}
             <OpenModal hidden = {!showLogoutModal}>
                 <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm'>
-                    <h1 className='font-bold text-xl text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
+                    <h1 className='font-bold text-xl text-gray-500 text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
                     <div className='flex gap-3 justify-center w-full md:scale-125'>
                         <button 
                             onClick={() => handleLogout()}
