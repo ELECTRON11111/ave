@@ -97,7 +97,7 @@ const Page = () => {
         updateLoading(true);
         // fetch geofences from server
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/get_geofences/`, { 
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/get_geofences/`, { 
                 headers: {
                 "Authorization": `Bearer ${jwtToken}`,
                 "Content-Type": "application/json"
@@ -130,7 +130,7 @@ const Page = () => {
 
         updateConfirmationLoading(true);
         try {
-            const response:any = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/record_attendance/`, 
+            const response:any = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/record_attendance/`, 
                 {},
                 {
                 headers: {
@@ -291,17 +291,17 @@ const Page = () => {
             {/* LOGOUT MODAL */}
             <OpenModal hidden = {!showLogoutModal}>
                 <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm'>
-                    <h1 className='font-bold text-xl text-gray-500 text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
+                    <h1 className='font-bold text-xl text-black text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
                     <div className='flex gap-3 justify-center w-full md:scale-125'>
                         <button 
                             onClick={() => handleLogout()}
-                            className='text-red-500 border-2 border-gray-100 px-3 py-2 rounded hover-effect hover:text-white hover:bg-red-500'
+                            className='text-red-500 border border-red-500 px-3 py-2 rounded hover-effect hover:text-white hover:bg-red-500'
                         >
                             Yes, leave
                         </button>
                         <button 
                             onClick={() => updateShowLogoutModal(false)}
-                            className='text-green-500 border-2 border-gray-100 px-3 py-2 rounded hover-effect hover:text-white hover:bg-green-500'
+                            className='text-green-500 border border-green-500 px-3 py-2 rounded hover-effect hover:text-white hover:bg-green-500'
                         >
                             No, go back
                         </button>

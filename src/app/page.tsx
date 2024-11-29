@@ -6,14 +6,18 @@ import Link from "next/link";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Alert from "@/components/Alert/Alert";
+import qs from "qs"
 
 // Home is the login page
 export default function Home () {
-  const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+  const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
   const [isStudent, changeIsStudent] = useState(false);
   const [loading, updateLoading] = useState(false);
   const [showAlert, updateShowAlert] = useState(false);
   const [alertMessage, updateAlertMessage] = useState("");
+  const [adminToken, updateAdminToken] = useState("");
+  const [studentToken, updateStudentToken] = useState("");
+  const [submitDisabled, updateSubmitDisabled] = useState(true);
   const [error, updateError] = useState({
     state: false,
     message: ""
@@ -35,18 +39,20 @@ export default function Home () {
   )
 
   useEffect(() => {
-    const admin_token = localStorage.getItem("admin_token");
+    const admin_token = localStorage.getItem("token");
     const student_token = localStorage.getItem("student_token");
-    // console.log(admin_token, student_token);
 
     if (admin_token || student_token) router.replace(`${admin_token? "/dashboard/admin": "/dashboard/student"}`);
-  })
+  });
 
   const spanClickHandler = (newState:boolean) => {
     changeIsStudent(newState);
   }
 
   const sendFormData =  async () => {
+    // if token is not expired, send user to dashboard
+    if (adminToken || studentToken) router.replace(`${adminToken? "/dashboard/admin": "/dashboard/student"}`);
+
     updateLoading(true);
     let token = "";
     try {
@@ -74,19 +80,20 @@ export default function Home () {
 
       // Save JWT token to local storage
       if (decoded.role == "student") {
-        // store the token in a cookie
-        document.cookie = `student_token=${response.data.access_token}; path=/`;
-        localStorage.setItem("student_token", JSON.stringify(token));
+        localStorage.setItem("student_token", response.data.access_token); // type "bearer"
       } else {
-        // store the admin token in a cookie
-        document.cookie = `admin_token=${response.data.access_token}; path=/`;
-        localStorage.setItem("admin_token", JSON.stringify(token));
+        localStorage.setItem("token", response.data.access_token); // type "bearer"
       }
       
       // Dynamically route the user based on their role
       router.push(`/dashboard/${decoded.role}`);
     } catch (error:any) {
+      // console.log(error);
       updateLoading(false);
+      if (error.message == "Network Error") {
+        updateError({state: true, message: "There was a network error. Please check your connection and try again."});
+      }
+
       if (error.response.data){
         updateError({state: true, message: error.response.data.detail});
       } else {
@@ -108,13 +115,16 @@ export default function Home () {
       ...prevState,
       [name]: type === "checkbox"? checked: value
     }));
+
+    const submitDisabled = formData.email == "" && formData.password == "";
+    updateSubmitDisabled(submitDisabled);
   }
 
   return (
     <div id="login" className="w-full bg-white p-4 py-8 md:flex md:flex-col md:justify-center md:px-60 md:pb-16">
       <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(prev => !prev); router.push("/#login")}}/>
       <div id="head" className="my-8">
-        <h1 className="my-2 text-3xl md:text-center">Login to AVE.</h1>
+        <h1 className="my-2 text-3xl font-extrabold md:text-center">Login to AVE.</h1>
         <h1 className="text-purple-600 md:text-center">Enter your Login details.</h1>
         <div id="links" className="m-4 flex justify-around">
           <span className={`border-b-2 p-2 cursor-pointer select-none ${isStudent? "border-b-purple-500": ""}`} onClick={() => changeIsStudent(true)}>Student</span>
@@ -130,8 +140,9 @@ export default function Home () {
         
         <button 
           type="submit" 
+          disabled={submitDisabled}
           onClick={sendFormData}
-          className="my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg"
+          className="my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg disabled:opacity-50"
         >
           {loading? Spinner: "Submit"}
         </button>

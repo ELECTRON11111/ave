@@ -6,9 +6,10 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/Model/Model";
+import qs from "qs";
 
 export default function Signup():any {
-    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}`;
+    const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
     const router = useRouter();
     const [formData, updateFormData] = useState({
         name: "",
@@ -68,34 +69,38 @@ export default function Signup():any {
         if (admin_token || student_token) router.replace(`${admin_token? "/dashboard/admin": "/dashboard/student"}`);
     });
 
-    const sendFormData =  async () => {
+    const sendFormData = async () => {
         try {
-            const response = await axios.post(`${baseUrl}/auth/create_user/`, {
-                "user_matric": formData.id,
-                "username": formData.name,
-                "password": formData.password,
-                "role": formData.role,
-                "email": formData.email,
-            }, {
-                headers: {
-                    'Content-Type': 'application/json',
-                    "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`
+            const response = await axios.post(`${baseUrl}/auth/create_user/`, 
+                {
+                    user_matric: formData.id,
+                    username: formData.name,
+                    password: formData.password,
+                    role: formData.role,
+                    email: formData.email,
                 },
-            });
+                {
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": process.env.NEXT_PUBLIC_API_KEY,
+                    },
+                }
+            );
             console.log(response);
 
             updateShowModal(true);
             updateWasPostSuccessful(true);
             updateLoading(false);
             updateErrorMessage("");
-        } catch (error:any) {
+        } catch (error: any) {
             console.log(error);
             updateShowModal(true);
             updateWasPostSuccessful(false);
-            updateErrorMessage(error.response.data.detail);
+            typeof error.response?.data?.detail === "string" &&
+                updateErrorMessage(error.response.data.detail);
             updateLoading(false);
         }
-    }
+    };
 
         
     const submitHandler = (e:any) => {
@@ -164,7 +169,7 @@ export default function Signup():any {
 
                     {wasPostSuccessful? 
                         ""
-                        :<h3 className={`pt-4 font-bold text-red-600 text-center`}>{errorMessage != ""? errorMessage: "Kindly check your network connecttion"}</h3>
+                        :<h3 className={`pt-4 font-bold text-red-600 text-center`}>{errorMessage != ""? errorMessage: "Kindly check your network connection"}</h3>
                     }
 
                     {wasPostSuccessful?     
