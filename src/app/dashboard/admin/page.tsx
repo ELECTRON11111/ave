@@ -186,10 +186,12 @@ function Admin_dashboard() {
                 console.log(response.data)
             }
         } catch (error:any) {
-            // console.log(error);
+            console.log(error);
             updateLoadingActiveClasses(false);
 
-            if (error.response.data.detail?.includes("not validate user") || error.response.data.detail?.includes("Not enough permissions")) {
+            if (!error.response.data) return
+
+            if (error.response.data?.detail?.includes("not validate user") || error.response.data.detail?.includes("Not enough permissions")) {
                 // alert(error.response.data.detail); Show error alert
                 updateAlertMessage(error.response.data.detail);
                 updateShowAlert(true);
@@ -338,7 +340,7 @@ function Admin_dashboard() {
                     <div className='flex gap-3 justify-center w-full md:scale-125'>
                         <button 
                             onClick={() => handleLogout()}
-                            className='text-red-500 border border-red-500 bg-red-100 px-3 py-2 rounded hover-effect hover:text-white hover:bg-red-500'
+                            className='text-red-500 border border-red-500 px-3 py-2 rounded hover-effect hover:text-white hover:bg-red-500'
                         >
                             Yes, leave
                         </button>

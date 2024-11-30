@@ -144,7 +144,7 @@ export default function Home () {
           onClick={sendFormData}
           className="my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg disabled:opacity-50"
         >
-          {loading? Spinner: "Submit"}
+          {loading? Spinner: "Login"}
         </button>
       </form>
 
