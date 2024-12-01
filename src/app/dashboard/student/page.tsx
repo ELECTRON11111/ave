@@ -61,14 +61,19 @@ const Page = () => {
             setDecodedToken(jwtDecode(token));
         }
 
+        // Get geolocation
+        getGeolocation();
+
         // Get user location
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(({ coords }) => {
-                const { latitude, longitude } = coords;
-                setLocation({ latitude, longitude });
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
+        if (location.latitude == 0 && location.longitude == 0) {
+            if ('geolocation' in navigator) {
+                navigator.geolocation.getCurrentPosition(({ coords }) => {
+                    const { latitude, longitude } = coords;
+                    setLocation({ latitude, longitude });
+                });
+            } else {
+                console.log("Geolocation is not supported by this browser.");
+            }
         }
     }, [router]);
 
@@ -92,6 +97,32 @@ const Page = () => {
         getGeofencesHandler();
       }
     });
+
+    const getGeolocation = async () => {
+        try {
+            const response = await fetch(`https://positioning.hereapi.com/v2/locate?apiKey=${process.env.NEXT_PUBLIC_HERE_API_KEY}`, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                "gsm": [
+                  {
+                    "mcc": 262,
+                    "mnc": 1,
+                    "lac": 5126,
+                    "cid": 21857
+                  }
+                ]
+              }),
+            });
+        
+            const data: any = await response.json();
+            console.log("Location:", data.location);
+
+            setLocation({longitude: data.location.lat, latitude: data.location.lng})
+        } catch (error) {
+            console.error("Error fetching geolocation:", error);
+        }
+    }
 
     async function getGeofencesHandler() {
         updateLoading(true);
