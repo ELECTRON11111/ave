@@ -54,7 +54,7 @@ const Page = () => {
         if (token != "") {
             getAttendanceHandler()
         }
-    })
+    }, [classData, token])
 
     const downloadCSV = () => {
         const table:any = document.getElementById('classAttendanceTable');

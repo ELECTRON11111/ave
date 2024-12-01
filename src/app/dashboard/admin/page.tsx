@@ -91,7 +91,7 @@ function Admin_dashboard() {
 
     useEffect(() => {
         if (jwtToken != "") getClassesCreatedByMe();
-    })
+    }, [jwtToken])
 
     const burgerClickedHandler = (e: any) => {
         e.preventDefault();
