@@ -7,11 +7,9 @@ import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Alert from '@/components/Alert/Alert';
 
-
 const Page = () => {
     const [classData, updateClassData] = useState({Code: "", name: "", date: ""});
     const [token, setToken] = useState("");
-    const [classEnded, updateClassEnded] = useState(true);
     const [attendanceList, updateAttendanceList] = useState([]);
     const [refreshListLoading, updateRefreshListLoading] = useState(false);
     const router = useRouter();
@@ -20,7 +18,7 @@ const Page = () => {
     const [showAlert, updateShowAlert] = useState(false);
 
     // Div reference showing no attendance records.
-    const divRef:any = useRef();
+    const divRef: any = useRef();
 
     const Spinner = (    
         <div role="status">
@@ -39,7 +37,7 @@ const Page = () => {
             router.push("/#login");
         } else {
             setToken(token);
-            updateClassEnded(false);
+            // updateClassEnded(false);
         }
 
         if (data) {
@@ -49,18 +47,14 @@ const Page = () => {
         } else {
             router.push("/#login");
         }
-
-        return () => {
-            // component unmounted -> check if user logged out 
-            updateClassEnded(true);
-        }
-
-    }, []);
+    }, [router]);
 
     useEffect(() => {
         // Once token is ready, refresh attendance list
-        token != "" && getAttendanceHandler();
-    }, [classData])
+        if (token != "") {
+            getAttendanceHandler()
+        }
+    })
 
     const downloadCSV = () => {
         const table:any = document.getElementById('classAttendanceTable');

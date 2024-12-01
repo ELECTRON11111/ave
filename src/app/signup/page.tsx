@@ -1,15 +1,14 @@
 "use client";
 import axios from "axios";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 // import React from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/Model/Model";
-import qs from "qs";
 
 export default function Signup():any {
-    const baseUrl = `${process.env.NEXT_PUBLIC_BASE_URL}`;
+    const baseUrl:string = `${process.env.NEXT_PUBLIC_BASE_URL}`;
     const router = useRouter();
     const [formData, updateFormData] = useState({
         name: "",
@@ -22,7 +21,7 @@ export default function Signup():any {
     const [showModal, updateShowModal] = useState(false);
     const [wasPostSuccessful, updateWasPostSuccessful] = useState(false);
 
-    const [isFormReady, updateIsFormReady] = useState(false);
+    // const [isFormReady, updateIsFormReady] = useState(false);
 
     const [emailErrorState, updateEmailErrorState] = useState(true);
     const [idErrorState, updateIdErrorState] = useState(true);
@@ -51,7 +50,6 @@ export default function Signup():any {
             role: "student",
             areTermsAgreed: false
         });
-        updateIsFormReady(false);
         updateErrorState(true);
         updateErrorMessage("");
         updateShowModal(false);
@@ -92,27 +90,25 @@ export default function Signup():any {
             updateWasPostSuccessful(true);
             updateLoading(false);
             updateErrorMessage("");
-        } catch (error: any) {
+        } catch (error: unknown) {
             console.log(error);
             updateShowModal(true);
             updateWasPostSuccessful(false);
-            typeof error.response?.data?.detail === "string" &&
-                updateErrorMessage(error.response.data.detail);
+            if (typeof (error as any).response?.data?.detail === "string") updateErrorMessage((error as any).response.data.detail);
             updateLoading(false);
         }
     };
 
         
-    const submitHandler = (e:any) => {
+    const submitHandler = (e:SubmitEvent) => {
         e.preventDefault();
         updateLoading(true);
         // console.log("Form Submitted", formData);
-        updateIsFormReady(true);
         sendFormData();
     }
 
-    const handleEmailError = (e: any) => {
-        if (e.target.value === "") {
+    const handleEmailError = (e: ChangeEvent<HTMLInputElement>) => {
+        if ((e.target as any).value === "") {
             updateEmailErrorState(true);
         } else {
             updateEmailErrorState(false);
@@ -121,8 +117,8 @@ export default function Signup():any {
         updateErrorState(emailErrorState && passwordErrorState)
     }
     
-    const handleIdError = (e: any) => {
-        if (e.target.value === "") {
+    const handleIdError = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target?.value === "") {
             updateErrorState(true);
         } else {
             updateIdErrorState(false);
@@ -131,7 +127,7 @@ export default function Signup():any {
         updateErrorState(idErrorState && passwordErrorState)
     }
 
-    const handleConfirmPassword = (e: any) => {
+    const handleConfirmPassword = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value !== formData.password) {
             updatePasswordErrorState(true);
         } else if (e.target.value == "") {
@@ -143,7 +139,7 @@ export default function Signup():any {
         updateErrorState(emailErrorState && passwordErrorState)
     }
 
-    const handleChange = (event: any) => {
+    const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
         event.persist();
         const { name, value, type, checked } = event.target;
 
@@ -175,7 +171,7 @@ export default function Signup():any {
                     {wasPostSuccessful?     
                         <button className="py-2 px-4 w-full border rounded mt-auto cursor-pointer
                         transition duration-300 ease-out hover:border-green-600" 
-                        onClick={(e) => {
+                        onClick={() => {
                             // restore defaults
                             updateShowModal(false); 
                             updateWasPostSuccessful(false);
@@ -185,7 +181,7 @@ export default function Signup():any {
                         }}>Proceed to login.</button>
                         : <button className="py-2 px-4 w-full border rounded mt-auto cursor-pointer
                         transition duration-300 ease-out hover:border-red-600" 
-                        onClick={(e) => {updateShowModal(false); updateWasPostSuccessful(false)}}>Close</button>
+                        onClick={() => {updateShowModal(false); updateWasPostSuccessful(false)}}>Close</button>
                     }
                 </div>
             </Modal>
@@ -197,19 +193,19 @@ export default function Signup():any {
                 </h1>
             </div>
             
-            <form action="#" className="flex flex-col justify-around" onSubmit={(e) => submitHandler(e)}>
-                <input type="name" name="name" className="input" onChange = {(e:any) => {handleChange(e);}} placeholder={`Enter your full name`} />
-                <input type="email" name="email" className="input" onChange = {(e:any) => {handleChange(e); handleEmailError(e)}} placeholder={`Enter your email`} />
-                <input type="text" name="id" className="input" onChange = {(e:any) => {handleChange(e); handleIdError(e)}} placeholder={`Enter your ID/Matric number`} />
-                <input type="password" name="password" onChange = {(e) => {handleChange(e); handleConfirmPassword(e)}} className="input" placeholder="Enter Password" />
-                <input type="password" className="input" onChange = {(e) => handleConfirmPassword(e)} placeholder="Confirm Password" />
+            <form action="#" className="flex flex-col justify-around" onSubmit={(e: any) => submitHandler(e)}>
+                <input type="name" name="name" className="input" onChange = {(e: ChangeEvent<HTMLInputElement>) => {handleChange(e);}} placeholder={`Enter your full name`} />
+                <input type="email" name="email" className="input" onChange = {(e: ChangeEvent<HTMLInputElement>) => {handleChange(e); handleEmailError(e)}} placeholder={`Enter your email`} />
+                <input type="text" name="id" className="input" onChange = {(e: ChangeEvent<HTMLInputElement>) => {handleChange(e); handleIdError(e)}} placeholder={`Enter your ID/Matric number`} />
+                <input type="password" name="password" onChange = {(e: ChangeEvent<HTMLInputElement>) => {handleChange(e); handleConfirmPassword(e)}} className="input" placeholder="Enter Password" />
+                <input type="password" className="input" onChange = {(e: ChangeEvent<HTMLInputElement>) => handleConfirmPassword(e)} placeholder="Confirm Password" />
 
                 {
                     passwordErrorState ? <p className="text-red-700 text-sm">Passwords do not match.</p>
                                 : <p className="text-green-700 text-sm">Passwords match, continue ..</p>
                 } 
 
-                <select name="role" defaultValue={"student"} onChange = {(e) => handleChange(e)} id="role" className="input text-gray-400">
+                <select name="role" defaultValue={"student"} onChange = {(e: ChangeEvent<any>) => handleChange(e)} id="role" className="input text-gray-400">
                     <option value="student">Student</option>
                     <option value="admin">Lecturer (admin)</option>
                 </select>

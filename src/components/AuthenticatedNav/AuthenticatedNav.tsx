@@ -1,6 +1,6 @@
 import React from 'react';
 
-const AuthenticatedNav = (props: {handleLogout: any}) => {
+const AuthenticatedNav = (props: {handleLogout: () => void}) => {
     return (
         <div className="AuthenticatedNav w-full flex justify-between bg-gray-50 fixed z-50 top-0 left-0 p-4 sm:px-8 shadow-sm">
             <div className='logo-title flex gap-2'>

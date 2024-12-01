@@ -1,8 +1,8 @@
 // This is a general UI element that wraps some content - order summary
-import React from "react";
+import React, { ReactElement } from "react";
 import Backdrop from "../Backdrop/Backdrop";
 
-function Modal(props: any) {
+function Modal(props: {show: boolean, modalClosed: () => void, children: ReactElement}) {
     return (
         <>
             <Backdrop show = {props.show} clicked={props.modalClosed}/>

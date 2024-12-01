@@ -6,7 +6,6 @@ import Link from "next/link";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Alert from "@/components/Alert/Alert";
-import qs from "qs"
 
 // Home is the login page
 export default function Home () {

@@ -87,11 +87,11 @@ function Admin_dashboard() {
             // clean up function 
             localStorage.setItem("sessionExpired", JSON.stringify(isSessionExpired));
         }
-    }, []);
+    }, [isSessionExpired]);
 
     useEffect(() => {
-        jwtToken != "" && getClassesCreatedByMe();
-    }, [jwtToken])
+        if (jwtToken != "") getClassesCreatedByMe();
+    })
 
     const burgerClickedHandler = (e: any) => {
         e.preventDefault();
@@ -106,7 +106,11 @@ function Admin_dashboard() {
         const {name, value} = event.target;
 
         if (name == "start_time") {
-            event.target.validity.valid ? updateIsTimeInputValid(true): updateIsTimeInputValid(false);
+            if (event.target.validity.valid) {
+                updateIsTimeInputValid(true)
+            } else {
+                updateIsTimeInputValid(false);
+            } 
         }
 
         updateFormData(prevState => ({...prevState, [name]: value}));
@@ -405,7 +409,7 @@ function Admin_dashboard() {
                                 className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%]'
                             >
                                 <div id='top-geofence-card' className='flex justify-between items-center'>
-                                    <img src='/classroom.svg' className='rounded-full' width={50} height={50}/>
+                                    <Image src='/classroom.svg' className='rounded-full' width={50} height={50} alt="class-room-vector"/>
                                     <span className='font-bold text-purple-500 text-sm sm:text-base'>{geofence.name}</span>
                                 </div>
                                 <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3'>
