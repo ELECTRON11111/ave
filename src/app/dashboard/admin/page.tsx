@@ -197,7 +197,7 @@ function Admin_dashboard() {
         if (currentHour < lowerBoundHour) {
             return '06:00';
         } else if (currentHour >= upperBoundHour) {
-            return '22:00'; // If the current time is beyond 22:00, restrict to max
+            // return '22:00'; // If the current time is beyond 22:00, restrict to max
         } else {
             // Return the current time formatted to 'hh:mm'
             return `${String(currentHour).padStart(2, '0')}:${String(currentMinute).padStart(2, '0')}`;
