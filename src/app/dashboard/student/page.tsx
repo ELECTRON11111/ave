@@ -150,7 +150,8 @@ const Page = () => {
     }
 
     async function recordAttendance (fenceCode:string, geofenceStatus: string) {
-
+        getGeolocation(); 
+        
         if (geofenceStatus == "inactive") {
             updateConfirmationSuccess({state: false, message: "", caution: false});
             updateConfirmationError({state: true, message: "The geofence you have selected is currently inactive"});

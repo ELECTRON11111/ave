@@ -240,6 +240,7 @@ function Admin_dashboard() {
 
     const classStartedHandler = async () => {
         updateClassStartedLoading(true);
+        getGeolocation();
 
         // get current date and time
         const now = getCurrentFormattedDate(0, formData.start_time);
@@ -247,7 +248,7 @@ function Admin_dashboard() {
 
         // Determine how many minutes away from from start date then add to start time
         
-        
+        console.log(location);
         console.log(formData, `start_time: ${now}, end_time: ${endTime}`);
         // Send user location, generated code, name and radius to backend server 
         try {
@@ -338,8 +339,10 @@ function Admin_dashboard() {
                         <input type="number" name="radius" onChange = {(e) => handleChange(e)} className="input w-[130%]" min={5} placeholder={`Enter valid radius e.g 150`} />
 
                         <label htmlFor="time" className="">Input the start time:</label>
-                        <input type="time" name="start_time" id="start_time" min={getMinTime()} max={"22:00"}
+                        <input type="time" name="start_time" id="start_time" min={getMinTime()} 
                         className="input w-[130%] text-gray-500" placeholder="Select start time" onChange={(e) => handleChange(e)} onBlur={(e) => handleChange(e)}/>
+                        {/* <input type="time" name="start_time" id="start_time" min={getMinTime()} max={"22:00"}
+                        className="input w-[130%] text-gray-500" placeholder="Select start time" onChange={(e) => handleChange(e)} onBlur={(e) => handleChange(e)}/> */}
 
                         {!isTimeInputValid ? <p className="text-sm text-red-500">Enter a valid time</p>: ""}
                         
