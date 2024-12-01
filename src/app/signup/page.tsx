@@ -219,7 +219,7 @@ export default function Signup():any {
                     {loading ? Spinner: "Submit"}
                 </button>
                 
-                {errorState? <p className="text-md text-red-700">Error, Fill all form inputs.</p>: ""}
+                {errorState? <p className="text-md text-red-700">Please fill all form inputs.</p>: ""}
             </form>
 
             <p className="my-2 text-md">Already have an account? <Link href={"/#login"} className="font-light underline">   Log In</Link></p>
