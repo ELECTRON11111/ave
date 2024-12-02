@@ -78,15 +78,17 @@ const Page = () => {
     }, [router]);
 
     useEffect(() => {
-        // Get user location
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(({ coords }) => {
-                const { latitude, longitude } = coords;
-                setLocation({ latitude, longitude });
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-        }
+        // // Get user location
+        // if ('geolocation' in navigator) {
+        //     navigator.geolocation.getCurrentPosition(({ coords }) => {
+        //         const { latitude, longitude } = coords;
+        //         setLocation({ latitude, longitude });
+        //     });
+        // } else {
+        //     console.log("Geolocation is not supported by this browser.");
+        // }
+
+        getGeolocation();
     }, [confirmButtonClicked])
     
     // Fetch desired fences from token after third render, so necessary data is gotten
@@ -151,7 +153,7 @@ const Page = () => {
 
     async function recordAttendance (fenceCode:string, geofenceStatus: string) {
         getGeolocation(); 
-        
+
         if (geofenceStatus == "inactive") {
             updateConfirmationSuccess({state: false, message: "", caution: false});
             updateConfirmationError({state: true, message: "The geofence you have selected is currently inactive"});
