@@ -269,7 +269,7 @@ const Page = () => {
             <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(false); localStorage.removeItem("student_token"); router.push("/#login")}}/>
             <Modal show={showModal} modalClosed= {() => updateShowModal(false)}>     
                 {confirmButtonClicked == false
-                    ? (<div className="flex flex-col items-center justify-center w-full h-full py-20 px-6 gap-5 rounded">
+                    ? (<div className="flex flex-col items-center justify-center w-full h-full py-4 px-6 gap-5 rounded">
                             <h1 className="text-2xl font-bold text-center">Enter the class fence code.</h1>
 
                             <form action="" className="flex flex-col items-center justify-center">

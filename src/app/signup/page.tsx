@@ -153,7 +153,7 @@ export default function Signup():any {
     return (
         <div id="login" className="w-full bg-white p-4 py-8 md:flex md:flex-col md:justify-center md:px-60 md:pb-16">
             <Modal show={showModal} modalClosed = {() => updateShowModal(false)}>
-                <div className="text-red h-[60vh] my-10 gap-5 mx-2 flex flex-col items-center">
+                <div className="text-red h-[60vh] my-4 gap-5 mx-2 flex flex-col items-center">
                     <Image src={wasPostSuccessful? "/success.svg" :"/warning.svg"} className="mx-auto mt-5" width={50} height={50} alt="error-icon"/>
 
                     {wasPostSuccessful? 

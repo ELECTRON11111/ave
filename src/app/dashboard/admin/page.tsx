@@ -328,7 +328,7 @@ function Admin_dashboard() {
                 router.push("/#login");
             }}/>
             <Modal show={classStarted} modalClosed= {() => classCancelledHandler}>
-                <div className="flex flex-col items-center justify-center w-full h-full py-6 md:py-20 px-6 gap-5 rounded">
+                <div className="flex flex-col items-center justify-center w-full h-full py-4 md:py-20 px-6 gap-5 rounded">
                     <h1 className="text-2xl font-bold text-center">Select Geofence.</h1>
 
                     <p className="text-center text-gray-500">Your class code would be generated</p>

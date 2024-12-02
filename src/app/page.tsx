@@ -49,6 +49,7 @@ export default function Home () {
   }
 
   const sendFormData =  async () => {
+    updateSubmitDisabled(true);
     // if token is not expired, send user to dashboard
     if (adminToken || studentToken) router.replace(`${adminToken? "/dashboard/admin": "/dashboard/student"}`);
 
@@ -66,6 +67,7 @@ export default function Home () {
         }
       });
       updateLoading(false);
+      updateSubmitDisabled(false);
       
       // update token variable
       if (typeof response !== 'undefined') {
@@ -102,6 +104,8 @@ export default function Home () {
         updateShowAlert(true);
         updateAlertMessage("An error occured. Please try again.");
       }
+
+      updateSubmitDisabled(false);
     }
   }
 
@@ -115,7 +119,10 @@ export default function Home () {
       [name]: type === "checkbox"? checked: value
     }));
 
-    const submitDisabled = formData.email == "" && formData.password == "";
+    // const submitDisabled = formData.email == "" && formData.password == "";
+    let submitDisabled = formData.email == "" && formData.password == "" || formData.email !== "" && formData.password == "" || formData.email == "" && formData.password !== "";
+    submitDisabled = formData.password === "" && formData.email !== ""? true : false;
+
     updateSubmitDisabled(submitDisabled);
   }
 
