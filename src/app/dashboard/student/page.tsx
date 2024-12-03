@@ -102,27 +102,26 @@ const Page = () => {
 
     const getGeolocation = async () => {
         try {
-            const response = await fetch(`https://positioning.hereapi.com/v2/locate?apiKey=${process.env.NEXT_PUBLIC_HERE_API_KEY}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                "gsm": [
-                  {
-                    "mcc": 262,
-                    "mnc": 1,
-                    "lac": 5126,
-                    "cid": 21857
-                  }
-                ]
-              }),
-            });
+            const response = await fetch(
+                `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({}) // Google Geolocation API expects an empty body
+                }
+            );
         
-            const data: any = await response.json();
-            console.log("Location:", data.location);
-
-            setLocation({longitude: data.location.lat, latitude: data.location.lng})
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error:", errorData);
+                return;
+            }
+        
+            const data = await response.json();
+            console.log("Location data:", data);
+            setLocation({ latitude: data.location.lat, longitude: data.location.lng });
         } catch (error) {
-            console.error("Error fetching geolocation:", error);
+            console.error("Fetch error:", error);
         }
     }
 

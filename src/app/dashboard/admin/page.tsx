@@ -119,7 +119,6 @@ function Admin_dashboard() {
     }
 
     const getGeolocation = async () => {
-
         try {
             const response = await fetch(
                 `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
@@ -138,11 +137,10 @@ function Admin_dashboard() {
         
             const data = await response.json();
             console.log("Location data:", data);
+            setLocation({ latitude: data.location.lat, longitude: data.location.lng });
         } catch (error) {
             console.error("Fetch error:", error);
         }
-        
-
     }
 
     const handleChange = (event: any) => {
