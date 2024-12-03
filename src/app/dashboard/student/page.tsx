@@ -146,7 +146,7 @@ const Page = () => {
 
             if (error.response.data.detail == "Could not validate user.") {
                 // alert(error.response.data.detail);
-                showAlertHandler(error.response.data.detail);
+                showAlertHandler("Sorry, your session expired");
             }
         }
     }
@@ -238,7 +238,7 @@ const Page = () => {
             if (error.response.data.detail == "Could not validate user.") {
                 // alert(error.response.data.detail);
                 
-                showAlertHandler(error.response.data.detail);
+                showAlertHandler("Sorry, your session expired.");
             }
 
             updateConfirmButtonClicked(true);

@@ -62,6 +62,17 @@ function Admin_dashboard() {
     )
 
     useEffect(() => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(({ coords }) => {
+                const { latitude, longitude } = coords;
+                setLocation({ latitude, longitude });
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }, [])
+
+    useEffect(() => {
         // Get JWT token
         const token:any = localStorage.getItem('token');
         if (token == null || token == "" || isSessionExpired) {
@@ -253,7 +264,7 @@ function Admin_dashboard() {
 
             if (error.response.data?.detail?.includes("not validate user") || error.response.data.detail?.includes("Not enough permissions")) {
                 // alert(error.response.data.detail); Show error alert
-                updateAlertMessage(error.response.data.detail);
+                updateAlertMessage("Sorry, your session expired.");
                 updateShowAlert(true);
 
                 // Delete the token
@@ -321,7 +332,7 @@ function Admin_dashboard() {
                 // Delete the token
                 localStorage.removeItem('token');
                 
-                updateAlertMessage(error.response.data.detail);
+                updateAlertMessage("Sorry, your session expired");
                 updateShowAlert(true); 
             }
         }
@@ -360,7 +371,14 @@ function Admin_dashboard() {
 
                     <form action="" className="flex flex-col items-center justify-center">
                         <input type="name" name="className" onChange = {(e) => handleChange(e)} className="input w-[130%] px-5" placeholder={`Enter class name`} />
-                        <input type="number" name="radius" onChange = {(e) => handleChange(e)} className="input w-[130%]" min={5} placeholder={`Enter valid radius e.g 150`} />
+                        {/* <input type="number" name="radius" onChange = {(e) => handleChange(e)} className="input w-[130%]" min={5} placeholder={`Enter valid radius e.g 150`} /> */}
+                        <select name="radius" defaultValue={10} onChange = {(e) => handleChange(e)} onBlur={(e) => handleChange(e)} id="radius" 
+                        className="input w-[130%] text-gray-500" aria-placeholder="Select class duration.">
+                            <option value="20">small Classroom e.g B4 (10m)</option>
+                            <option value="50">medium classroom e.g B6 (20m)</option>
+                            <option value="40">large class e.g ELT (30m) </option>
+                            <option value="130">Extra-large Hall e.g LT2 (100m)</option>
+                        </select>
 
                         <label htmlFor="time" className="">Input the start time:</label>
                         <input type="time" name="start_time" id="start_time" min={getMinTime()} 

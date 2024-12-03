@@ -113,7 +113,7 @@ const Page = () => {
                     
                     // Show Alert component
                     updateShowAlert(true);
-                    updateAlertMessage(error.response.data.detail);
+                    updateAlertMessage("Sorry, your session expired.");
                 }
                 return;
             }
@@ -124,7 +124,7 @@ const Page = () => {
             if (error.response.data.detail.includes("not validate user") || error.response.data.detail.includes("Not enough permissions")) {
                 // alert(error.response.data.detail);
                 updateShowAlert(true);
-                updateAlertMessage(error.response.data.detail);
+                updateAlertMessage("Sorry, your session expired.");
                 // router.push("/#login");
             }
         }
@@ -161,7 +161,7 @@ const Page = () => {
             if (error.response.data.detail.includes("not validate user")) {
                 // Show Alert component
                 updateShowAlert(true);
-                updateAlertMessage(error.response.data.detail);
+                updateAlertMessage("Sorry, your session expired.");
             }
         }
     }
