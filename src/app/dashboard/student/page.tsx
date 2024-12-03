@@ -78,15 +78,15 @@ const Page = () => {
     }, [router]);
 
     useEffect(() => {
-        // // Get user location
-        // if ('geolocation' in navigator) {
-        //     navigator.geolocation.getCurrentPosition(({ coords }) => {
-        //         const { latitude, longitude } = coords;
-        //         setLocation({ latitude, longitude });
-        //     });
-        // } else {
-        //     console.log("Geolocation is not supported by this browser.");
-        // }
+        // Get user location
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(({ coords }) => {
+                const { latitude, longitude } = coords;
+                setLocation({ latitude, longitude });
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
 
         getGeolocation();
     }, [confirmButtonClicked])
