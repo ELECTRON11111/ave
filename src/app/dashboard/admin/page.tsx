@@ -108,29 +108,53 @@ function Admin_dashboard() {
     }
 
     const getGeolocation = async () => {
-        try {
-            const response = await fetch(`https://positioning.hereapi.com/v2/locate?apiKey=${process.env.NEXT_PUBLIC_HERE_API_KEY}`, {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                "gsm": [
-                  {
-                    "mcc": 262,
-                    "mnc": 1,
-                    "lac": 5126,
-                    "cid": 21857
-                  }
-                ]
-              }),
-            });
+        // try {
+        //     const response = await fetch(`https://positioning.hereapi.com/v2/locate?apiKey=${process.env.NEXT_PUBLIC_HERE_API_KEY}`, {
+        //       method: "POST",
+        //       headers: { "Content-Type": "application/json" },
+        //       body: JSON.stringify({
+        //         "gsm": [
+        //           {
+        //             "mcc": 262,
+        //             "mnc": 1,
+        //             "lac": 5126,
+        //             "cid": 21857
+        //           }
+        //         ]
+        //       }),
+        //     });
         
-            const data: any = await response.json();
-            console.log("Location:", data.location);
+        //     const data: any = await response.json();
+        //     console.log("Location:", data.location);
 
-            setLocation({longitude: data.location.lat, latitude: data.location.lng})
+        //     setLocation({longitude: data.location.lat, latitude: data.location.lng})
+        // } catch (error) {
+        //     console.error("Error fetching geolocation:", error);
+        // }
+
+        try {
+            const response = await fetch(
+                `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
+                {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({}) // Google Geolocation API expects an empty body
+                }
+            );
+        
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("Error:", errorData);
+                return;
+            }
+        
+            const data = await response.json();
+            console.log("Location data:", data);
         } catch (error) {
-            console.error("Error fetching geolocation:", error);
+            console.error("Fetch error:", error);
         }
+        
+
     }
 
     const handleChange = (event: any) => {
@@ -398,6 +422,7 @@ function Admin_dashboard() {
 
             <div id="topSection" className="flex items-center justify-center mt-20 gap-16 my-6">
                 {/* Input first name from backend */}
+                <div>Long: {location.longitude}, Lat: {location.latitude}</div>
                 <div id="left-of-section" className="flex flex-col gap-5 mx-10">
                     <div className="flex gap-2 items-center justify-center">
                         <h1 className="text-3xl font-bold">Hello there, <span className="text-purple-700 pl-1">{decodedToken.username}</span>.</h1>
