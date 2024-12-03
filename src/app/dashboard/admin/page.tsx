@@ -415,9 +415,9 @@ function Admin_dashboard() {
             <AuthenticatedNav handleLogout={() => updateShowLogoutModal(true)}/>
             
 
-            <div id="topSection" className="flex items-center flex-col justify-center mt-20 gap-16 my-6">
+            <div id="topSection" className="flex items-center justify-center mt-20 gap-16 my-6">
                 {/* Input first name from backend */}
-                <div>Long: {location.longitude}, Lat: {location.latitude}</div>
+                {/* <div>Long: {location.longitude}, Lat: {location.latitude}</div> */}
                 <div id="left-of-section" className="flex flex-col gap-5 mx-10">
                     <div className="flex gap-2 items-center justify-center">
                         <h1 className="text-3xl font-bold">Hello there, <span className="text-purple-700 pl-1">{decodedToken.username}</span>.</h1>
