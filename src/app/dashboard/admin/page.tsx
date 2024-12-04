@@ -62,6 +62,17 @@ function Admin_dashboard() {
     )
 
     useEffect(() => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(({ coords }) => {
+                const { latitude, longitude } = coords;
+                console.log("Navigator:", { latitude, longitude });
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }, [])
+
+    useEffect(() => {
         // Get JWT token
         const token:any = localStorage.getItem('token');
         if (token == null || token == "" || isSessionExpired) {
@@ -95,28 +106,85 @@ function Admin_dashboard() {
         changeNavHidden(!value);
     }
 
+    // const getGeolocation = async () => {
+    //     try {
+    //         const response = await fetch(
+    //             `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
+    //             {
+    //                 method: "POST",
+    //                 headers: { "Content-Type": "application/json" },
+    //                 body: JSON.stringify({}) // Google Geolocation API expects an empty body
+    //             }
+    //         );
+        
+    //         if (!response.ok) {
+    //             const errorData = await response.json();
+    //             console.error("Error:", errorData);
+    //             return;
+    //         }
+        
+    //         const data = await response.json();
+    //         console.log("Location data:", data);
+    //         setLocation({ latitude: data.location.lat, longitude: data.location.lng });
+    //     } catch (error) {
+    //         console.error("Fetch error:", error);
+    //     }
+    // }
+
     const getGeolocation = async () => {
         try {
+            // Collect more detailed network information
+            const networkInfo = {
+                considerIp: "true", // Explicitly consider IP-based location
+                cellTowers: [
+                    {
+                        cellId: 12345, // Unique identifier for the cell tower
+                        locationAreaCode: 415, // Location area code
+                        mobileCountryCode: 310, // Mobile country code
+                        mobileNetworkCode: 260, // Mobile network code
+                        signalStrength: -60 // Signal strength in dBm
+                    }
+                ],
+                wifiAccessPoints: [
+                    {
+                        macAddress: "00:25:9C:CF:1F:AC", // MAC address of the Wi-Fi access point
+                        signalStrength: -43, // Signal strength in dBm
+                        channel: 6, // Wi-Fi channel
+                        signalToNoiseRatio: 0 // Signal-to-noise ratio
+                    }
+                ]
+            };
+    
             const response = await fetch(
                 `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({}) // Google Geolocation API expects an empty body
+                    body: JSON.stringify(networkInfo)
                 }
             );
         
             if (!response.ok) {
                 const errorData = await response.json();
-                console.error("Error:", errorData);
-                return;
+                console.error("Geolocation Error:", errorData);
+                return null;
             }
         
             const data = await response.json();
-            // console.log("Location data:", data);
-            setLocation({ latitude: data.location.lat, longitude: data.location.lng });
+            console.log("Location data:", data);
+            
+            // Optional: Log accuracy information
+            console.log("Location Accuracy:", data.accuracy, "meters");
+            
+            setLocation({ 
+                latitude: data.location.lat, 
+                longitude: data.location.lng,
+            });
+    
+            return data;
         } catch (error) {
-            console.error("Fetch error:", error);
+            console.error("Geolocation Fetch Error:", error);
+            return null;
         }
     }
 
@@ -445,13 +513,13 @@ function Admin_dashboard() {
                                 </div>
                                 <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3'>
                                     <span>{`${parseInt(geofence.start_time.slice(11,16).split(":")[0]) + 1}:${geofence.start_time.slice(11,16).split(":")[1]}`}</span>
-                                    <div id='active-status-geofence-card' className='flex gap-2 items-center'>
+                                    <div id='active-status-geofence-card' className='flex justify-center gap-1 items-center sm:gap-2'>
                                         <span className={`w-[10px] h-[10px] rounded-full 
                                             ${geofence.status == "active"? "bg-green-500 text-green-500" 
                                                 :(geofence.status == "scheduled"? "bg-yellow-500 text-yellow-500" : "bg-red-500 text-red-500")}`}
                                         ></span>
                                         {/** red or green dot depending on active status*/}
-                                        <span>{geofence.status}</span>
+                                        <span className="text-sm">{geofence.status}</span>
                                     </div>
                                 </div>
                             </div>

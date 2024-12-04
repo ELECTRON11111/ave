@@ -52,6 +52,17 @@ const Page = () => {
             <span className="sr-only">Loading...</span>
         </div>
     )
+
+    useEffect(() => {
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(({ coords }) => {
+                const { latitude, longitude } = coords;
+                console.log("Navigator:", { latitude, longitude });
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
+        }
+    }, [])
     
     useEffect(() => {
         const token:any = localStorage.getItem('student_token');
@@ -97,7 +108,7 @@ const Page = () => {
             }
         
             const data = await response.json();
-            // console.log("Location data:", data);
+            console.log("Location data:", data);
             setLocation({ latitude: data.location.lat, longitude: data.location.lng });
         } catch (error) {
             console.error("Fetch error:", error);
