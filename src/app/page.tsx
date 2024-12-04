@@ -6,6 +6,7 @@ import Link from "next/link";
 import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Alert from "@/components/Alert/Alert";
+import Modal from "@/components/Model/Model";
 
 // Home is the login page
 export default function Home () {
@@ -17,6 +18,7 @@ export default function Home () {
   const [adminToken, updateAdminToken] = useState("");
   const [studentToken, updateStudentToken] = useState("");
   const [submitDisabled, updateSubmitDisabled] = useState(true);
+  const [showDisclaimer, updateShowDisclaimer] = useState(true);
   const [error, updateError] = useState({
     state: false,
     message: ""
@@ -128,6 +130,22 @@ export default function Home () {
 
   return (
     <div id="login" className="w-full bg-white p-4 py-8 md:flex md:flex-col md:justify-center md:px-60 md:pb-16">
+      <Modal show={showDisclaimer} modalClosed= {() => updateShowDisclaimer(false)}>
+        <div className="flex flex-col gap-4">
+          <h1 className="text-center font-extrabold">Important notice!</h1>
+          <ul className="flex flex-col gap-2 text-sm sm:text-base">
+            <li>1. This site is more optimized to mobile</li>
+            <li>2. Consider switching to mobile for better accuracy</li>
+          </ul>
+          <button 
+            className="w-full py-2 px-auto bg-purple-500 text-center text-white rounded-lg hover:bg-purple-700" 
+            onClick={() => updateShowDisclaimer(false)}
+          >
+            Ok
+          </button>
+        </div>
+      </Modal>
+
       <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(prev => !prev); router.push("/#login")}}/>
       <div id="head" className="my-8">
         <h1 className="my-2 text-3xl font-extrabold md:text-center">Login to AVE.</h1>

@@ -118,7 +118,7 @@ const Page = () => {
             }
         
             const data = await response.json();
-            console.log("Location data:", data);
+            // console.log("Location data:", data);
             setLocation({ latitude: data.location.lat, longitude: data.location.lng });
         } catch (error) {
             console.error("Fetch error:", error);

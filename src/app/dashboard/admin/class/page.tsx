@@ -8,7 +8,7 @@ import axios from 'axios';
 import Alert from '@/components/Alert/Alert';
 
 const Page = () => {
-    const [classData, updateClassData] = useState({Code: "", name: "", date: ""});
+    const [classData, updateClassData] = useState({Code: "", name: "", date: "", active: false});
     const [token, setToken] = useState("");
     const [attendanceList, updateAttendanceList] = useState([]);
     const [refreshListLoading, updateRefreshListLoading] = useState(false);
@@ -42,7 +42,7 @@ const Page = () => {
 
         if (data) {
             data = JSON.parse(data);
-            console.log(data);
+            // console.log(data);
             updateClassData(data);
         } else {
             router.push("/#login");
@@ -108,9 +108,6 @@ const Page = () => {
                 divRef.current.textContent = error.response.data.detail;
 
                 if (error.response.data.detail.includes("not validate user") || error.response.data.detail.includes("Not enough permissions")) {
-                    // alert(error.response.data.detail);
-                    // router.push("/#login");
-                    
                     // Show Alert component
                     updateShowAlert(true);
                     updateAlertMessage("Sorry, your session expired.");
@@ -122,7 +119,6 @@ const Page = () => {
             updateRefreshListLoading(false);
             
             if (error.response.data.detail.includes("not validate user") || error.response.data.detail.includes("Not enough permissions")) {
-                // alert(error.response.data.detail);
                 updateShowAlert(true);
                 updateAlertMessage("Sorry, your session expired.");
                 // router.push("/#login");
@@ -188,9 +184,10 @@ const Page = () => {
                     <button 
                         onClick={endClassHandler}
                         className='py-2 px-6 w-[90%] border border-purple-500 my-3 text-red bg-white
-                        transition ease-out duration-300 hover:bg-red-600 hover:text-white'
+                        transition ease-out duration-300 hover:bg-red-600 hover:text-white disabled:bg-red-500 disabled:opacity-75 disabled:text-white'
+                        disabled={!classData.active}
                     >
-                        {endClassLoading? Spinner :"End Class"}
+                        {endClassLoading? Spinner :(classData.active? "End Class": "Class is inactive")}
                     </button>
                     <button 
                         className='px-4 border border-purple-500 scale-[65%]' 

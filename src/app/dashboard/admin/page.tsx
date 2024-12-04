@@ -136,7 +136,7 @@ function Admin_dashboard() {
             }
         
             const data = await response.json();
-            console.log("Location data:", data);
+            // console.log("Location data:", data);
             setLocation({ latitude: data.location.lat, longitude: data.location.lng });
         } catch (error) {
             console.error("Fetch error:", error);
@@ -318,7 +318,7 @@ function Admin_dashboard() {
         event.preventDefault();
         
         // update the local storage class Data to that of clicked class.
-        localStorage.setItem("classData", JSON.stringify({Code: geofence.fence_code, name: geofence.name, date: geofence.start_time}));
+        localStorage.setItem("classData", JSON.stringify({Code: geofence.fence_code, name: geofence.name, date: geofence.start_time, active: geofence.status == "active"}));
 
         router.push('/dashboard/admin/class');
     }
@@ -338,8 +338,8 @@ function Admin_dashboard() {
                 router.push("/#login");
             }}/>
             <Modal show={classStarted} modalClosed= {() => classCancelledHandler}>
-                <div className="flex flex-col items-center justify-center w-full h-full py-4 md:py-20 px-6 gap-5 rounded">
-                    <h1 className="text-2xl font-bold text-center">Select Geofence.</h1>
+                <div className="flex flex-col items-center justify-center w-full h-full py-4 md:py-6 px-6 md:px-10 gap-5 rounded">
+                    <h1 className="text-2xl font-bold text-center">Create Geofence.</h1>
 
                     <p className="text-center text-gray-500">Your class code would be generated</p>
                     {/* <p className="text-center text-gray-500">Your class code is <span className="font-bold">{code}</span></p> */}
@@ -356,7 +356,7 @@ function Admin_dashboard() {
                         </select>
 
                         <label htmlFor="time" className="">Input the start time:</label>
-                        <input type="time" name="start_time" id="start_time" min={getMinTime()} 
+                        <input type="time" name="start_time" id="start_time" min={getMinTime()} max={"22:00"}
                         className="input w-[130%] text-gray-500" placeholder="Select start time" onChange={(e) => handleChange(e)} onBlur={(e) => handleChange(e)}/>
                         {/* <input type="time" name="start_time" id="start_time" min={getMinTime()} max={"22:00"}
                         className="input w-[130%] text-gray-500" placeholder="Select start time" onChange={(e) => handleChange(e)} onBlur={(e) => handleChange(e)}/> */}
@@ -427,7 +427,7 @@ function Admin_dashboard() {
                     <ul className="list-disc">
                         <li>Start a class.</li>
                         <li>Unique class code is generated.</li>
-                        <li>Choose geofence.</li>
+                        <li>Choose geofence radius.</li>
                         <li>See students attendace and end session.</li>
                     </ul>
                 </div>
