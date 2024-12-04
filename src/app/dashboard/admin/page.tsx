@@ -132,59 +132,13 @@ function Admin_dashboard() {
     // }
 
     const getGeolocation = async () => {
-        try {
-            // Collect more detailed network information
-            const networkInfo = {
-                considerIp: "true", // Explicitly consider IP-based location
-                cellTowers: [
-                    {
-                        cellId: 12345, // Unique identifier for the cell tower
-                        locationAreaCode: 415, // Location area code
-                        mobileCountryCode: 310, // Mobile country code
-                        mobileNetworkCode: 260, // Mobile network code
-                        signalStrength: -60 // Signal strength in dBm
-                    }
-                ],
-                wifiAccessPoints: [
-                    {
-                        macAddress: "00:25:9C:CF:1F:AC", // MAC address of the Wi-Fi access point
-                        signalStrength: -43, // Signal strength in dBm
-                        channel: 6, // Wi-Fi channel
-                        signalToNoiseRatio: 0 // Signal-to-noise ratio
-                    }
-                ]
-            };
-    
-            const response = await fetch(
-                `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify(networkInfo)
-                }
-            );
-        
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Geolocation Error:", errorData);
-                return null;
-            }
-        
-            const data = await response.json();
-            console.log("Location data:", data);
-            
-            // Optional: Log accuracy information
-            console.log("Location Accuracy:", data.accuracy, "meters");
-            
-            setLocation({ 
-                latitude: data.location.lat, 
-                longitude: data.location.lng,
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(({ coords }) => {
+                const { latitude, longitude } = coords;
+                setLocation({ latitude, longitude });
             });
-    
-            return data;
-        } catch (error) {
-            console.error("Geolocation Fetch Error:", error);
-            return null;
+        } else {
+            console.log("Geolocation is not supported by this browser.");
         }
     }
 

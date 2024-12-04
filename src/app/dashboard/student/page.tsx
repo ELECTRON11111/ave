@@ -91,27 +91,36 @@ const Page = () => {
     });
 
     const getGeolocation = async () => {
-        try {
-            const response = await fetch(
-                `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
-                {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({}) // Google Geolocation API expects an empty body
-                }
-            );
+        // try {
+        //     const response = await fetch(
+        //         `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
+        //         {
+        //             method: "POST",
+        //             headers: { "Content-Type": "application/json" },
+        //             body: JSON.stringify({}) // Google Geolocation API expects an empty body
+        //         }
+        //     );
         
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("Error:", errorData);
-                return;
-            }
+        //     if (!response.ok) {
+        //         const errorData = await response.json();
+        //         console.error("Error:", errorData);
+        //         return;
+        //     }
         
-            const data = await response.json();
-            console.log("Location data:", data);
-            setLocation({ latitude: data.location.lat, longitude: data.location.lng });
-        } catch (error) {
-            console.error("Fetch error:", error);
+        //     const data = await response.json();
+        //     console.log("Location data:", data);
+        //     setLocation({ latitude: data.location.lat, longitude: data.location.lng });
+        // } catch (error) {
+        //     console.error("Fetch error:", error);
+        // }
+
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(({ coords }) => {
+                const { latitude, longitude } = coords;
+                setLocation({ latitude, longitude });
+            });
+        } else {
+            console.log("Geolocation is not supported by this browser.");
         }
     }
 
