@@ -64,31 +64,9 @@ const Page = () => {
 
         // Get geolocation
         getGeolocation();
-
-        // Get user location
-        if (location.latitude == 0 && location.longitude == 0) {
-            if ('geolocation' in navigator) {
-                navigator.geolocation.getCurrentPosition(({ coords }) => {
-                    const { latitude, longitude } = coords;
-                    setLocation({ latitude, longitude });
-                });
-            } else {
-                console.log("Geolocation is not supported by this browser.");
-            }
-        }
     }, [router]);
 
     useEffect(() => {
-        // Get user location
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(({ coords }) => {
-                const { latitude, longitude } = coords;
-                setLocation({ latitude, longitude });
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
-        }
-
         getGeolocation();
     }, [confirmButtonClicked])
     
