@@ -62,6 +62,8 @@ const Page = () => {
         } else {
             console.log("Geolocation is not supported by this browser.");
         }
+
+        getGeolocation();
     }, [])
     
     useEffect(() => {
@@ -90,39 +92,44 @@ const Page = () => {
       }
     });
 
-    const getGeolocation = async () => {
-        // try {
-        //     const response = await fetch(
-        //         `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
-        //         {
-        //             method: "POST",
-        //             headers: { "Content-Type": "application/json" },
-        //             body: JSON.stringify({}) // Google Geolocation API expects an empty body
-        //         }
-        //     );
-        
-        //     if (!response.ok) {
-        //         const errorData = await response.json();
-        //         console.error("Error:", errorData);
-        //         return;
-        //     }
-        
-        //     const data = await response.json();
-        //     console.log("Location data:", data);
-        //     setLocation({ latitude: data.location.lat, longitude: data.location.lng });
-        // } catch (error) {
-        //     console.error("Fetch error:", error);
-        // }
-
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(({ coords }) => {
-                const { latitude, longitude } = coords;
-                setLocation({ latitude, longitude });
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
+    const getGeolocation = () => {
+        // Ensure geolocation is supported
+        if (!('geolocation' in navigator)) {
+          alert("Geolocation is not supported by this browser.");
+          return;
         }
-    }
+    
+        // Request location with maximum accuracy and permission prompt
+        navigator.geolocation.getCurrentPosition(
+          // Success callback
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+          }, 
+          // Error callback (handles permission denial)
+          (err) => {
+            switch(err.code) {
+              case err.PERMISSION_DENIED:
+                alert("Location permission was denied. Please enable in browser settings.");
+                break;
+              case err.POSITION_UNAVAILABLE:
+                alert("Location information is unavailable.");
+                break;
+              case err.TIMEOUT:
+                alert("Location request timed out.");
+                break;
+              default:
+                alert("An unknown error occurred.");
+            }
+          }, 
+          // Options to force permission prompt
+          {
+            enableHighAccuracy: true, // Ensures maximum accuracy
+            timeout: 5000,            // 5 second timeout
+            maximumAge: 0             // Prevents cached locations
+          }
+        );
+      };
 
     async function getGeofencesHandler() {
         updateLoading(true);
