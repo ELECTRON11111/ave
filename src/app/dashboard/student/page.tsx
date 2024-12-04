@@ -1,5 +1,5 @@
 "use client"
-import React from 'react';
+import React, { ChangeEvent } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
@@ -18,6 +18,7 @@ const Page = () => {
     const [confirmationError, updateConfirmationError] = useState({state: false, message: ""});
     const [confirmationSuccess, updateConfirmationSuccess] = useState({state: false, message: "", caution: false});
     const [geofences, updateGeofences] = useState([]);
+    const [geofencesBeforeSearch, updateGeofencesBeforeSearch] = useState([]);
     const [selectedGeofenceData, updateSelectedGeofenceData] = useState({name: "", radius: 0, fence_code:"", status: ""})
     const [showModal, updateShowModal] = useState(false);
     const [showLogoutModal, updateShowLogoutModal] = useState(false);
@@ -263,6 +264,39 @@ const Page = () => {
         router.push("/#login");
     }
 
+    const geofenceSearchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const searchQuery = e.target.value.trim();
+    
+        if (!geofencesBeforeSearch.length) {
+            updateGeofencesBeforeSearch(geofences);
+        }
+    
+        if (!searchQuery) {
+            // If search is empty, reset to original list
+            updateGeofences(geofencesBeforeSearch);
+            return;
+        }
+    
+        // Create a case-insensitive, partial match regex
+        const searchRegex = new RegExp(searchQuery.split('').join('.*'), 'i');
+    
+        const updatedGeofences = geofencesBeforeSearch.filter((geofence: { 
+            name: string, 
+            fence_code?: string, 
+            status?: string 
+        }) => {
+            // Search across multiple fields with flexible matching
+            return (
+                searchRegex.test(geofence.name) || 
+                (geofence.fence_code && searchRegex.test(geofence.fence_code)) || 
+                (geofence.status && searchRegex.test(geofence.status))
+            );
+        });
+    
+        updateGeofences(updatedGeofences);
+    };    
+    
+
     return (
         <div id='Student-dashboard-page' className='p-4 flex font-body flex-col py-16'>
             <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(false); localStorage.removeItem("student_token"); router.push("/#login")}}/>
@@ -358,6 +392,8 @@ const Page = () => {
                 className='py-2 px-6 w-full border border-purple-500 my-3 text-black bg-white
                 transition ease-out duration-300 hover:border-2'
                 placeholder='Search for a class.'
+                onChange={(e: any) => geofenceSearchHandler(e)}
+                onBlur={(e: any) => geofenceSearchHandler(e)}
             />
 
             <h3 className='border-b-2 w-full px-4 my-6'>All available classes</h3>
