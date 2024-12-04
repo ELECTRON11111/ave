@@ -385,7 +385,7 @@ function Admin_dashboard() {
                         </select>
 
                         <label htmlFor="time" className="">Input the start time:</label>
-                        <input type="time" name="start_time" id="start_time" min={getMinTime()} max={"22:00"}
+                        <input type="time" name="start_time" id="start_time" min={getMinTime()} max={"23:30"}
                         className="input w-[130%] text-gray-500" placeholder="Select start time" onChange={(e) => handleChange(e)} onBlur={(e) => handleChange(e)}/>
                         {/* <input type="time" name="start_time" id="start_time" min={getMinTime()} max={"22:00"}
                         className="input w-[130%] text-gray-500" placeholder="Select start time" onChange={(e) => handleChange(e)} onBlur={(e) => handleChange(e)}/> */}
