@@ -70,6 +70,8 @@ function Admin_dashboard() {
         } else {
             console.log("Geolocation is not supported by this browser.");
         }
+
+        getGeolocation();
     }, [])
 
     useEffect(() => {
@@ -131,16 +133,44 @@ function Admin_dashboard() {
     //     }
     // }
 
-    const getGeolocation = async () => {
-        if ('geolocation' in navigator) {
-            navigator.geolocation.getCurrentPosition(({ coords }) => {
-                const { latitude, longitude } = coords;
-                setLocation({ latitude, longitude });
-            });
-        } else {
-            console.log("Geolocation is not supported by this browser.");
+    const getGeolocation = () => {
+        // Ensure geolocation is supported
+        if (!('geolocation' in navigator)) {
+          alert("Geolocation is not supported by this browser.");
+          return;
         }
-    }
+    
+        // Request location with maximum accuracy and permission prompt
+        navigator.geolocation.getCurrentPosition(
+          // Success callback
+          (position) => {
+            const { latitude, longitude } = position.coords;
+            setLocation({ latitude, longitude });
+          }, 
+          // Error callback (handles permission denial)
+          (err) => {
+            switch(err.code) {
+              case err.PERMISSION_DENIED:
+                alert("Location permission was denied. Please enable in browser settings.");
+                break;
+              case err.POSITION_UNAVAILABLE:
+                alert("Location information is unavailable.");
+                break;
+              case err.TIMEOUT:
+                alert("Location request timed out.");
+                break;
+              default:
+                alert("An unknown error occurred.");
+            }
+          }, 
+          // Options to force permission prompt
+          {
+            enableHighAccuracy: true, // Ensures maximum accuracy
+            timeout: 5000,            // 5 second timeout
+            maximumAge: 0             // Prevents cached locations
+          }
+        );
+      };
 
     const handleChange = (event: any) => {
         event.persist();
