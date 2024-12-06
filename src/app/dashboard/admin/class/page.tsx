@@ -90,7 +90,7 @@ const Page = () => {
                     "Content-Type": "application/json"
                 }
             });
-            console.log(response);
+            // console.log(response);
             if (typeof response.data != "string") {
                 //  if its not a string, its an array
                 const classRecordString = `${classData.name} attendance records`;

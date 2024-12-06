@@ -65,7 +65,7 @@ function Admin_dashboard() {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(({ coords }) => {
                 const { latitude, longitude } = coords;
-                console.log("Navigator:", { latitude, longitude });
+                // console.log("Navigator:", { latitude, longitude });
             });
         } else {
             console.log("Geolocation is not supported by this browser.");
@@ -287,8 +287,8 @@ function Admin_dashboard() {
 
         // Determine how many minutes away from from start date then add to start time
         
-        console.log(location);
-        console.log(formData, `start_time: ${now}, end_time: ${endTime}`);
+        // console.log(location);
+        // console.log(formData, `start_time: ${now}, end_time: ${endTime}`);
         // Send user location, generated code, name and radius to backend server 
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/create_geofences/`, {

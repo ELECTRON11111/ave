@@ -57,7 +57,7 @@ const Page = () => {
         if ('geolocation' in navigator) {
             navigator.geolocation.getCurrentPosition(({ coords }) => {
                 const { latitude, longitude } = coords;
-                console.log("Navigator:", { latitude, longitude });
+                // console.log("Navigator:", { latitude, longitude });
             });
         } else {
             console.log("Geolocation is not supported by this browser.");
