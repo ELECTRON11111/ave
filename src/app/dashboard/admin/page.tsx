@@ -379,7 +379,7 @@ function Admin_dashboard() {
                         <select name="radius" defaultValue={10} onChange = {(e) => handleChange(e)} onBlur={(e) => handleChange(e)} id="radius" 
                         className="input w-[130%] text-gray-500" aria-placeholder="Select class duration.">
                             <option value="20">Small Classroom e.g B4 (10m)</option>
-                            <option value="50">Medium Classroom e.g B6 (20m)</option>
+                            <option value="30">Medium Classroom e.g B6 (20m)</option>
                             <option value="40">Large Class e.g ELT (30m) </option>
                             <option value="130">Extra-Large Hall e.g LT2 (100m)</option>
                         </select>
