@@ -306,7 +306,7 @@ function Admin_dashboard() {
                 }
             });
 
-            // console.log(response); // response in form {data: {code: "", name: ""}}
+            console.log(response); // response in form {data: {code: "", name: ""}}
             updateCode(response.data.Code);
             updateLoading(false);
             updateClassStartedLoading(false);
@@ -417,7 +417,7 @@ function Admin_dashboard() {
                 </div>
             </Modal>
 
-            {/* admin navigations */}
+            {/* admin navigations */}q
             {/* LOGOUT MODAL */}
             <OpenModal hidden = {!showLogoutModal}>
                 <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm'>

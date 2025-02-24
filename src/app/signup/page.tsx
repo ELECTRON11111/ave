@@ -69,7 +69,7 @@ export default function Signup():any {
 
     const sendFormData = async () => {
         try {
-            const response = await axios.post(`${baseUrl}/auth/create_user/`, 
+            const response = await axios.post(`${baseUrl}/users/create_user/`, 
                 {
                     user_matric: formData.id,
                     username: formData.name,

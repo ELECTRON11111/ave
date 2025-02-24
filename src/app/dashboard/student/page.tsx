@@ -11,7 +11,7 @@ import AuthenticatedNav from '@/components/AuthenticatedNav/AuthenticatedNav';
 import OpenModal from '@/components/OpenModal/OpenModal';
 
 const Page = () => {
-    const [jwtToken, setJwtToken] = useState("");
+    const [username, updateUsername] = useState("");
     const [loading, updateLoading] = useState(true);
     const [confirmButtonClicked, updateConfirmButtonClicked] = useState(false);
     const [confirmationLoading, updateConfirmationLoading] = useState(false);
@@ -26,12 +26,12 @@ const Page = () => {
     const [alertMessage, updateAlertMessage] = useState("");
     const [showAlert, updateShowAlert] = useState(false);
     
-    const [decodedToken, setDecodedToken] = useState({
-        sub: '', 
-        username: '', 
-        role: 'student', 
-        user_matric: '', 
-    });
+    // const [decodedToken, setDecodedToken] = useState({
+    //     sub: '', 
+    //     username: '', 
+    //     role: 'student', 
+    //     user_matric: '', 
+    // });
     const [location, setLocation] = useState({
         latitude: 0,
         longitude: 0,
@@ -68,11 +68,13 @@ const Page = () => {
     
     useEffect(() => {
         const token:any = localStorage.getItem('student_token');
+        const userNameData:string = (localStorage.getItem('user_name') as string);
+        updateUsername(userNameData);
+
         if (token == null) {
             router.push("/#login");
         } else {
-            setJwtToken(token);
-            setDecodedToken(jwtDecode(token));
+            // Do not do anything for now
         }
 
         // Get geolocation
@@ -135,19 +137,23 @@ const Page = () => {
         updateLoading(true);
         // fetch geofences from server
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/get_geofences/`, { 
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/get_geofences/`, { 
                 headers: {
-                "Authorization": `Bearer ${jwtToken}`,
                 "Content-Type": "application/json"
             }
         });
-            // console.log(response);
+            console.log(response);
+            console.log(response.data.geofences);
+            console.log(geofences);
+
             updateGeofences(response.data.geofences);
             updateLoading(false);
             
         } catch (error: any) {
             console.log(error);
             updateLoading(false);
+
+            console.log(geofences);
 
             if (error.response.data.detail == "Could not validate user.") {
                 // alert(error.response.data.detail);
@@ -173,7 +179,6 @@ const Page = () => {
                 {},
                 {
                 headers: {
-                    Authorization: `Bearer ${jwtToken}`,
                     "Content-Type": "application/json",
                 },
                 params: {
@@ -185,7 +190,7 @@ const Page = () => {
             });
 
             updateConfirmationLoading(false);
-            // console.log(response);
+            console.log(response);
 
             if (typeof response.data.message == "undefined") {
                 updateConfirmationSuccess({state: false, message: "", caution: false});
@@ -384,17 +389,17 @@ const Page = () => {
             <AuthenticatedNav handleLogout={() => updateShowLogoutModal(true)}/>
             <Image src="/students.svg" alt ="students svg" width={200} height={200} className='self-center'/>
     
-            <h1 className='text-center text-4xl font-bold'>Welcome to your student dashboard.</h1>
-            <h3 className='text-center py-4'>Hello <span className='text-purple-500'>{decodedToken.username}</span>, join your class.</h3>
+            <h1 className='text-center text-4xl font-bold text-[#313131] font-playwrite py-2'>Student Dashboard</h1>
+            <h3 className='text-center py-4'>Hello <span className='text-purple-500'>{username}</span>, join your class.</h3>
             <button 
                 onClick={getGeofencesHandler}
-                className='py-2 px-6 w-full text white border border-white my-3 rounded text-white bg-purple-500
+                className='py-2 px-6 w-full text white border border-white my-3 rounded-lg text-white bg-purple-500
                 transition ease-out duration-300 hover:bg-purple-800'
             >
                 Refresh List
             </button>
             <input type='text' 
-                className='py-2 px-6 w-full border border-purple-500 my-3 text-black bg-white
+                className='py-2 px-6 w-full border border-purple-500 my-3 rounded-lg text-black bg-white
                 transition ease-out duration-300 hover:border-2'
                 placeholder='Search for a class.'
                 onChange={(e: any) => geofenceSearchHandler(e)}
@@ -405,8 +410,8 @@ const Page = () => {
             <div className='flex justify-center items-center w-full'>
                 {loading 
                     ? Spinner
-                    : (<div id='fences_list' className='w-full grid grid-cols-2 gap-4 md:grid-cols-4'>
-                        {typeof(geofences) !== "undefined" ? geofences.map((geofence:any, index) => (
+                    : (<div id='fences_list' className='w-full relative grid grid-cols-2 gap-4 md:grid-cols-4'>
+                        {typeof(geofences) !== "undefined" && geofences.length !== 0 ? geofences.map((geofence:any, index) => (
                             <div key={index} 
                                 onClick={() => {updateShowModal(true); updateSelectedGeofenceData({...geofence})}}  // record attendance when a class card is clicked
                                 className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%]'
@@ -427,7 +432,10 @@ const Page = () => {
                                     </div>
                                 </div>
                             </div>
-                        )): <div className='py-4 text-lg'>There are no active classes at the moment. Please try again later.</div>}
+                        )): <div className='p-12 text-lg absolute flex flex-col gap-4'>
+                                <img src='/sad-girl.svg' />
+                                <h3 className='text-sm text-center'>Sorry, there are no active classes at the moment</h3>
+                            </div>}
 
                     </div>)
                 }
