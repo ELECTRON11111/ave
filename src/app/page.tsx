@@ -63,16 +63,20 @@ export default function Home () {
         "password": formData.password,
       },
       {
+        // withCredentials: true,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`,
-          credentials: 'include',
         }
       });
       updateLoading(false);
       updateSubmitDisabled(false);
 
       console.log(response);
+
+      // Store session token as cookie
+      // document.cookie = `session_token=${response.data.session_token}; Max-Age=86400; Path=/; SameSite=Lax; Secure`;
+      // console.log("Cookie set:", document.cookie) // verifying cookie's presence
       
       // update token variable
       if (typeof response !== 'undefined') {
