@@ -143,7 +143,7 @@ const Page = () => {
                 },
             });
 
-            // console.log(response);
+            console.log(response);
             updateEndClassLoading(false);
 
             // Show alert component

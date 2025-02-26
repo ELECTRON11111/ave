@@ -16,6 +16,7 @@ function Admin_dashboard() {
         latitude: 0,
         longitude: 0,
     });
+    const [username, updateUsername] = useState("");
     const [isSessionExpired, updateIsSessionExpired] = useState(false);
     const [NavHidden, changeNavHidden] = useState(true);
     const [classStarted, updateClassStarted] = useState(false);
@@ -31,14 +32,6 @@ function Admin_dashboard() {
     const [error, updateError] = useState({
         state: false,
         message: "",
-    });
-    const [jwtToken, setJwtToken] = useState("");
-    const [decodedToken, setDecodedToken] = useState({
-        sub: '', 
-        username: '', 
-        role: 'admin', 
-        user_matric: '', 
-        duration: 30
     });
     const [code, updateCode] = useState("");
     const [formData, updateFormData] = useState({
@@ -71,34 +64,18 @@ function Admin_dashboard() {
             console.log("Geolocation is not supported by this browser.");
         }
 
+        // Get username from local storage
+        const username:string = (localStorage.getItem("user_name") as string);
+        updateUsername(username);
+
         getGeolocation();
+        getClassesCreatedByMe();
     }, [])
 
     useEffect(() => {
-        // Get JWT token
-        const token:any = localStorage.getItem('token');
-        if (token == null || token == "" || isSessionExpired) {
-            // router.push("/#login");
-            updateIsSessionExpired(true);
-        } else {
-            // console.log(token);
-            setJwtToken(token);
-            setDecodedToken(jwtDecode(token));
-            updateIsSessionExpired(false);
-        }
-
         // Get geolocation
         getGeolocation();
-
-        return () => {
-            // clean up function 
-            localStorage.setItem("sessionExpired", JSON.stringify(isSessionExpired));
-        }
     }, [isSessionExpired]);
-
-    useEffect(() => {
-        if (jwtToken != "") getClassesCreatedByMe();
-    }, [jwtToken])
 
     const burgerClickedHandler = (e: any) => {
         e.preventDefault();
@@ -108,30 +85,6 @@ function Admin_dashboard() {
         changeNavHidden(!value);
     }
 
-    // const getGeolocation = async () => {
-    //     try {
-    //         const response = await fetch(
-    //             `https://www.googleapis.com/geolocation/v1/geolocate?key=${process.env.NEXT_PUBLIC_GOOGLE_API_KEY}`, 
-    //             {
-    //                 method: "POST",
-    //                 headers: { "Content-Type": "application/json" },
-    //                 body: JSON.stringify({}) // Google Geolocation API expects an empty body
-    //             }
-    //         );
-        
-    //         if (!response.ok) {
-    //             const errorData = await response.json();
-    //             console.error("Error:", errorData);
-    //             return;
-    //         }
-        
-    //         const data = await response.json();
-    //         console.log("Location data:", data);
-    //         setLocation({ latitude: data.location.lat, longitude: data.location.lng });
-    //     } catch (error) {
-    //         console.error("Fetch error:", error);
-    //     }
-    // }
 
     const getGeolocation = () => {
         // Ensure geolocation is supported
@@ -245,12 +198,12 @@ function Admin_dashboard() {
 
     const getClassesCreatedByMe = async () => {
         updateLoadingActiveClasses(true);
-        // console.log(`This is the token taken for admin: ${jwtToken}`)
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/get_my_geofences_created/`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/get_my_geofences/`, {
+                withCredentials: true,
                 headers: {
-                    Authorization: `Bearer ${jwtToken}`,
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
+                    "credentials": "include",
                 }
             });
             updateLoadingActiveClasses(false)
@@ -285,13 +238,10 @@ function Admin_dashboard() {
         const now = getCurrentFormattedDate(0, formData.start_time);
         const endTime = getCurrentFormattedDate(formData.duration, "", now);
 
-        // Determine how many minutes away from from start date then add to start time
-        
-        // console.log(location);
         // console.log(formData, `start_time: ${now}, end_time: ${endTime}`);
         // Send user location, generated code, name and radius to backend server 
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/create_geofences/`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/create_geofence/`, {
                 "name": formData.className,
                 "latitude": location.latitude,
                 "longitude": location.longitude,
@@ -300,13 +250,13 @@ function Admin_dashboard() {
                 "start_time": now,
                 "end_time": endTime,
             }, {
+                withCredentials: true,
                 headers: {
-                    Authorization: `Bearer ${jwtToken}`,
-                    "Content-Type": "application/json"
+                    "Content-Type": "application/json",
                 }
             });
 
-            // console.log(response); // response in form {data: {code: "", name: ""}}
+            console.log(response); // response in form {data: {code: "", name: ""}}
             updateCode(response.data.Code);
             updateLoading(false);
             updateClassStartedLoading(false);
@@ -417,7 +367,7 @@ function Admin_dashboard() {
                 </div>
             </Modal>
 
-            {/* admin navigations */}
+            {/* admin navigations */}q
             {/* LOGOUT MODAL */}
             <OpenModal hidden = {!showLogoutModal}>
                 <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm'>
@@ -448,7 +398,7 @@ function Admin_dashboard() {
 
                 <div id="left-of-section" className="flex flex-col gap-5 mx-10">
                     <div className="flex gap-2 items-center justify-center">
-                        <h1 className="text-3xl font-bold">Hello there, <span className="text-purple-700 pl-1">{decodedToken.username}</span>.</h1>
+                        <h1 className="text-3xl font-bold">Hello there, <span className="text-purple-700 pl-1">{username}</span>.</h1>
                         <Image src= "/pngwing.com.png" width={"34"} height={"34"} alt="crown"/>
                     </div>
 

@@ -63,41 +63,47 @@ export default function Home () {
         "password": formData.password,
       },
       {
+        // withCredentials: true,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
-          "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`
+          "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`,
         }
       });
       updateLoading(false);
       updateSubmitDisabled(false);
+
+      console.log(response);
+
+      // Store session token as cookie
+      // document.cookie = `session_token=${response.data.session_token}; Max-Age=86400; Path=/; SameSite=Lax; Secure`;
+      // console.log("Cookie set:", document.cookie) // verifying cookie's presence
       
       // update token variable
       if (typeof response !== 'undefined') {
-        token = response.data.access_token;
+        token = response.data.session_token;
       } else {
         updateError({state: true, message: "Network Error. Please check your connection and try again."});    
       }
       
-      // decode the token to determine user role and dynamically route them
-      const decoded:any = jwtDecode(token);
-
-      // Save JWT token to local storage
-      if (decoded.role == "student") {
-        localStorage.setItem("student_token", response.data.access_token); // type "bearer"
+      // Save Session token to local storage
+      if (response.data.role == "student") {
+        localStorage.setItem("student_token", response.data.session_token); // 
+        localStorage.setItem("user_name", response.data.username);
       } else {
-        localStorage.setItem("token", response.data.access_token); // type "bearer"
+        localStorage.setItem("token", response.data.session_token); // type "bearer"
+        localStorage.setItem("user_name", response.data.username);
       }
       
       // Dynamically route the user based on their role
-      router.push(`/dashboard/${decoded.role}`);
+      router.push(`/dashboard/${response.data.role}`);
     } catch (error:any) {
-      // console.log(error);
+      console.log(error);
       updateLoading(false);
       if (error.message == "Network Error") {
         updateError({state: true, message: "There was a network error. Please check your connection and try again."});
       }
 
-      if (error.response.data){
+      if (error.response.data.detail){
         updateError({state: true, message: error.response.data.detail});
       } else {
         console.log(error);

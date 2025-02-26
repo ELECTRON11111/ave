@@ -1,6 +1,9 @@
+@import url('https://fonts.googleapis.com/css2?family=Playwrite+IT+Moderna:wght@100..400&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 
 .input {
   @apply border my-3 p-2 rounded border-purple-500 active:border-purple-500 focus:border-purple-500
