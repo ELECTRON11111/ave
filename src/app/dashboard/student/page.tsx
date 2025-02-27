@@ -9,6 +9,7 @@ import Modal from '@/components/Model/Model';
 import Alert from '@/components/Alert/Alert';
 import AuthenticatedNav from '@/components/AuthenticatedNav/AuthenticatedNav';
 import OpenModal from '@/components/OpenModal/OpenModal';
+import process from "process"
 
 const Page = () => {
     const [username, updateUsername] = useState("");
@@ -137,8 +138,8 @@ const Page = () => {
         updateLoading(true);
         // fetch geofences from server
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/get_geofences/`, { 
-                headers: {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/get_geofences`, { 
+                withCredentials: true, headers: {
                 "Content-Type": "application/json"
             }
         });
@@ -178,6 +179,7 @@ const Page = () => {
             const response:any = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/record_attendance/`, 
                 {},
                 {
+                    withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
                 },

@@ -7,6 +7,7 @@ import axios from 'axios';
 import { useRouter } from 'next/navigation';
 import Alert from "@/components/Alert/Alert";
 import Modal from "@/components/Model/Model";
+import process from "process"
 
 // Home is the login page
 export default function Home () {
@@ -58,16 +59,17 @@ export default function Home () {
     updateLoading(true);
     let token = "";
     try {
-      const response = await axios.post(`${baseUrl}/auth/token/`, {
+      const response = await axios.post(`${baseUrl}/auth/token`, {
         "username": formData.email,
         "password": formData.password,
       },
       {
-        // withCredentials: true,
+        withCredentials: true,
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded',
           "x-api-key": `${process.env.NEXT_PUBLIC_API_KEY}`,
-        }
+        },
+        
       });
       updateLoading(false);
       updateSubmitDisabled(false);
