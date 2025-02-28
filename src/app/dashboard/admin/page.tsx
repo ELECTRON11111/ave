@@ -9,7 +9,8 @@ import { usePathname } from "next/navigation";
 import Alert from "@/components/Alert/Alert";
 import OpenModal from "@/components/OpenModal/OpenModal";
 import AuthenticatedNav from "@/components/AuthenticatedNav/AuthenticatedNav";
-import process from "process"
+import { DateTime, Duration } from "luxon";
+import process from "process";
 
 function Admin_dashboard() {
     // Get user co-ordinates here, take longitude and latitude
@@ -235,8 +236,13 @@ function Admin_dashboard() {
         getGeolocation();
 
         // get current date and time
-        const now = getCurrentFormattedDate(0, formData.start_time);
-        const endTime = getCurrentFormattedDate(formData.duration, "", now);
+        // const now = getCurrentFormattedDate(0, formData.start_time);
+        // const now = new Date().toISOString();
+        // const endTime = now.split("T")[1]
+        const now = DateTime.now();
+        const duration = Duration.fromObject({hours: 1, minutes: 0});
+        const endTime = now.plus(duration).toISO();
+        console.log(now.toISO(), duration, endTime);
 
         // console.log(formData, `start_time: ${now}, end_time: ${endTime}`);
         // Send user location, generated code, name and radius to backend server 
@@ -247,7 +253,7 @@ function Admin_dashboard() {
                 "longitude": location.longitude,
                 "radius": formData.radius,
                 "fence_type": "circle",
-                "start_time": now,
+                "start_time": now.toISO(),
                 "end_time": endTime,
             }, {
                 withCredentials: true,
