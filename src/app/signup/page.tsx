@@ -6,6 +6,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import Modal from "@/components/Model/Model";
+import process from "process"
 
 export default function Signup():any {
     const baseUrl:string = `${process.env.NEXT_PUBLIC_BASE_URL}`;
@@ -69,7 +70,7 @@ export default function Signup():any {
 
     const sendFormData = async () => {
         try {
-            const response = await axios.post(`${baseUrl}/users/create_user/`, 
+            const response = await axios.post(`${baseUrl}/users/create_user`, 
                 {
                     user_matric: formData.id,
                     username: formData.name,
@@ -78,6 +79,7 @@ export default function Signup():any {
                     email: formData.email,
                 },
                 {
+                    withCredentials: true,
                     headers: {
                         "Content-Type": "application/json",
                         "x-api-key": process.env.NEXT_PUBLIC_API_KEY,

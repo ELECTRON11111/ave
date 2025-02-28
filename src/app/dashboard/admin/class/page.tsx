@@ -6,6 +6,7 @@ import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import Alert from '@/components/Alert/Alert';
+import process from "process"
 
 const Page = () => {
     const [classData, updateClassData] = useState({Code: "", name: "", date: "", active: false});
@@ -85,7 +86,9 @@ const Page = () => {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/get_attendance/`, { params: {
                     "course_title": classData.name,
                     "date": classData.date.slice(0,10)
-                }, headers: {
+                }, 
+                withCredentials: true,
+                headers: {
                     "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                 }
@@ -130,9 +133,10 @@ const Page = () => {
         updateEndClassLoading(true);
         // send put rquest to deativate geofence
         try {
-            const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/manual_deactivate_geofence/`,
+            const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/manual_deactivate_geofence`,
                 {}, 
                 {
+                withCredentials: true,
                 headers: {
                     Authorization: `Bearer ${token}`,
                     "Content-Type": "application/json"

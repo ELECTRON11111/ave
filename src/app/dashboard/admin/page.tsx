@@ -9,6 +9,7 @@ import { usePathname } from "next/navigation";
 import Alert from "@/components/Alert/Alert";
 import OpenModal from "@/components/OpenModal/OpenModal";
 import AuthenticatedNav from "@/components/AuthenticatedNav/AuthenticatedNav";
+import process from "process"
 
 function Admin_dashboard() {
     // Get user co-ordinates here, take longitude and latitude
@@ -199,15 +200,14 @@ function Admin_dashboard() {
     const getClassesCreatedByMe = async () => {
         updateLoadingActiveClasses(true);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/get_my_geofences/`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/get_my_geofences`, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
-                    "credentials": "include",
                 }
             });
             updateLoadingActiveClasses(false)
-            if (response.data) {
+            if (response.data) { 
                 // console.log(response.data)
                 updateGeofencesByThisAdmin(response.data.geofences);
             } else {
@@ -241,7 +241,7 @@ function Admin_dashboard() {
         // console.log(formData, `start_time: ${now}, end_time: ${endTime}`);
         // Send user location, generated code, name and radius to backend server 
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/create_geofence/`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/create_geofence`, {
                 "name": formData.className,
                 "latitude": location.latitude,
                 "longitude": location.longitude,
