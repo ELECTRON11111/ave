@@ -201,7 +201,7 @@ function Admin_dashboard() {
     const getClassesCreatedByMe = async () => {
         updateLoadingActiveClasses(true);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/get_my_geofences`, {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/get_my_geofences`, {
                 withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
@@ -247,7 +247,7 @@ function Admin_dashboard() {
         // console.log(formData, `start_time: ${now}, end_time: ${endTime}`);
         // Send user location, generated code, name and radius to backend server 
         try {
-            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/create_geofence`, {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/create_geofence`, {
                 "name": formData.className,
                 "latitude": location.latitude,
                 "longitude": location.longitude,
@@ -459,7 +459,7 @@ function Admin_dashboard() {
                                                 :(geofence.status == "scheduled"? "bg-yellow-500 text-yellow-500" : "bg-red-500 text-red-500")}`}
                                         ></span>
                                         {/** red or green dot depending on active status*/}
-                                        <span className="text-sm">{geofence.status}</span>
+                                        <span className="text-sm">{geofence.status === 'active' ? 'Active' : 'Inactive'}</span>
                                     </div>
                                 </div>
                             </div>

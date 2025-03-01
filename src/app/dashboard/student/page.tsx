@@ -138,7 +138,7 @@ const Page = () => {
         updateLoading(true);
         // fetch geofences from server
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofences/get_geofences`, { 
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/get_geofences`, { 
                 withCredentials: true, headers: {
                 "Content-Type": "application/json"
             }
@@ -176,19 +176,23 @@ const Page = () => {
 
         updateConfirmationLoading(true);
         try {
-            const response:any = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/record_attendance/`, 
-                {},
+            const response:any = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/record_attendance`, 
+                {
+                    fence_code: formData.fenceCode,
+                    lat: location.latitude,
+                    long: location.longitude
+                },
                 {
                     withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
                 },
-                params: {
-                    // getting form data not working correctly, fix this. (make this dynamic)
-                    "fence_code": formData.fenceCode,
-                    "lat": location.latitude,
-                    "long": location.longitude
-                }   
+                // params: {
+                //     // getting form data not working correctly, fix this. (make this dynamic)
+                //     "fence_code": formData.fenceCode,
+                //     "lat": location.latitude,
+                //     "long": location.longitude
+                // }   
             });
 
             updateConfirmationLoading(false);
@@ -427,7 +431,7 @@ const Page = () => {
                                     <div id='active-status-geofence-card' className='flex w-full text-sm gap-2 items-center sm:text-lg'>
                                         <span className={`w-[10px] h-[10px] rounded-full ${geofence.status == "active"? "bg-green-500 text-green-500": (geofence.status == "scheduled"? "bg-yellow-500 text-yellow-500" :"bg-red-500 text-red-500")}`}></span>
                                         {/** red or green dot depending on active status*/}
-                                        <span className='text-nowrap'>{geofence.status}</span>
+                                        <span className='text-nowrap'>{geofence.status === 'active' ? 'Active' : 'Inactive'}</span>
                                         <span className="self-end ml-auto text-end">
                                             {`${parseInt(geofence.start_time.slice(11,16).split(":")[0]) + 1}:${geofence.start_time.slice(11,16).split(":")[1]}`}
                                         </span>
