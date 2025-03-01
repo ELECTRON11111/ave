@@ -459,7 +459,7 @@ function Admin_dashboard() {
                                                 :(geofence.status == "scheduled"? "bg-yellow-500 text-yellow-500" : "bg-red-500 text-red-500")}`}
                                         ></span>
                                         {/** red or green dot depending on active status*/}
-                                        <span className="text-sm">{geofence.status === 'active' ? 'Active' : 'Inactive'}</span>
+                                        <span className="text-sm">{geofence.status === 'active' ? 'Active' : geofence.status === 'scheduled' ? 'Scheduled' : 'Inactive'}</span>
                                     </div>
                                 </div>
                             </div>
