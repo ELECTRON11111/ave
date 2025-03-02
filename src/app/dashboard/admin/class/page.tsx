@@ -83,7 +83,7 @@ const Page = () => {
     const getAttendanceHandler = async () => {
         updateRefreshListLoading(true);
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/get_attendance/`, { params: {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/get_attendances`, { params: {
                     "course_title": classData.name,
                     "date": classData.date.slice(0,10)
                 }, 
@@ -94,12 +94,12 @@ const Page = () => {
                 }
             });
             // console.log(response);
-            if (typeof response.data != "string") {
+            if (response.data.attendance && Array.isArray(response.data.attendance)) {
                 //  if its not a string, its an array
                 const classRecordString = `${classData.name} attendance records`;
                 console.log(classRecordString)
-                updateAttendanceList(response.data[`${classData.name} attendance records`]);
-
+                updateAttendanceList(response.data.attendance); 
+ 
                 updateRefreshListLoading(false);
             } else {
                 // There are no attendance records
@@ -133,7 +133,7 @@ const Page = () => {
         updateEndClassLoading(true);
         // send put rquest to deativate geofence
         try {
-            const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/manual_deactivate_geofence`,
+            const response = await axios.put(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/deactivate`,
                 {}, 
                 {
                 withCredentials: true,
