@@ -11,6 +11,7 @@ import OpenModal from "@/components/OpenModal/OpenModal";
 import AuthenticatedNav from "@/components/AuthenticatedNav/AuthenticatedNav";
 import { DateTime, Duration } from "luxon";
 import process from "process";
+import { start } from "repl";
 
 function Admin_dashboard() {
     // Get user co-ordinates here, take longitude and latitude
@@ -38,8 +39,8 @@ function Admin_dashboard() {
     const [code, updateCode] = useState("");
     const [formData, updateFormData] = useState({
         className: "",
-        radius: 0,
-        duration: 30,
+        radius: 20,
+        duration: "0:30", // duration format is hour:minute
         start_time: ""
     });
 
@@ -207,6 +208,8 @@ function Admin_dashboard() {
                     "Content-Type": "application/json",
                 }
             });
+
+            console.log(response);
             updateLoadingActiveClasses(false)
             if (response.data) { 
                 // console.log(response.data)
@@ -235,16 +238,14 @@ function Admin_dashboard() {
         updateClassStartedLoading(true);
         getGeolocation();
 
-        // get current date and time
-        // const now = getCurrentFormattedDate(0, formData.start_time);
-        // const now = new Date().toISOString();
-        // const endTime = now.split("T")[1]
-        const now = DateTime.now();
-        const duration = Duration.fromObject({hours: 1, minutes: 0});
-        const endTime = now.plus(duration).toISO();
-        console.log(now.toISO(), duration, endTime);
+        // Implement Start and end time logic
+        const startTime = DateTime.fromSQL(`${formData.start_time}:00`);
+        const durationHour = parseInt(formData.duration.split(":")[0]);
+        const durationMin = parseInt(formData.duration.split(":")[1]);
+        const duration = Duration.fromObject({hours: durationHour, minutes: durationMin});
+        const endTime = startTime.plus(duration).toISO();
+        console.log(startTime.toISO(), formData, endTime);
 
-        // console.log(formData, `start_time: ${now}, end_time: ${endTime}`);
         // Send user location, generated code, name and radius to backend server 
         try {
             const response = await axios.post(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/create_geofence`, {
@@ -253,7 +254,7 @@ function Admin_dashboard() {
                 "longitude": location.longitude,
                 "radius": formData.radius,
                 "fence_type": "circle",
-                "start_time": now.toISO(),
+                "start_time": startTime.toISO(),
                 "end_time": endTime,
             }, {
                 withCredentials: true,
@@ -269,6 +270,7 @@ function Admin_dashboard() {
             updateError({message: "", state: false});
             
             router.push('/dashboard/admin/class');
+            const now = startTime;
             localStorage.setItem("classData", JSON.stringify({...response.data, date: now}));
         } catch (error:any) {
             // console.error(error);
@@ -332,8 +334,8 @@ function Admin_dashboard() {
                     <form action="" className="flex flex-col items-center justify-center">
                         <input type="name" name="className" onChange = {(e) => handleChange(e)} className="input w-[130%] px-5" placeholder={`Enter class name`} />
                         {/* <input type="number" name="radius" onChange = {(e) => handleChange(e)} className="input w-[130%]" min={5} placeholder={`Enter valid radius e.g 150`} /> */}
-                        <select name="radius" defaultValue={10} onChange = {(e) => handleChange(e)} onBlur={(e) => handleChange(e)} id="radius" 
-                        className="input w-[130%] text-gray-500" aria-placeholder="Select class duration.">
+                        <select name="radius" defaultValue={20} onChange = {(e) => handleChange(e)} onBlur={(e) => handleChange(e)} id="radius" 
+                        className="input w-[130%] text-gray-500" aria-placeholder="Select class radius.">
                             <option value="20">Small Classroom e.g B4 (10m)</option>
                             <option value="30">Medium Classroom e.g B6 (20m)</option>
                             <option value="40">Large Class e.g ELT (30m) </option>
@@ -350,10 +352,11 @@ function Admin_dashboard() {
                         
                         <select name="duration" defaultValue={30} onChange = {(e) => handleChange(e)} onBlur={(e) => handleChange(e)} id="duration" 
                         className="input w-[130%] text-gray-500" aria-placeholder="Select class duration.">
-                            <option value="30">Class duration - 30 minutes</option>
-                            <option value="60">1 hour</option>
-                            <option value="90">1 hour 30 minutes</option>
-                            <option value="120">2 hours</option>
+                            {/* Value format is hour:minute */}
+                            <option value="0:30">Class duration - 30 minutes</option>
+                            <option value="1:0">1 hour</option>
+                            <option value="1:30">1 hour 30 minutes</option>
+                            <option value="2:0">2 hours</option>
                         </select>
                     </form>
 
