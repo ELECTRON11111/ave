@@ -358,7 +358,7 @@ function Admin_dashboard() {
                     </form>
 
                     { error.state && !loading? 
-                        <div className=" text-sm text-center text-red-500">{error.message}</div>
+                        <div className=" text-sm text-center font-bold text-red-500">{error.message}</div>
                         : ""   
                     }
 
