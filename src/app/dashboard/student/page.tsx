@@ -431,7 +431,7 @@ const Page = () => {
                                     <div id='active-status-geofence-card' className='flex w-full text-sm gap-2 items-center sm:text-lg'>
                                         <span className={`w-[10px] h-[10px] rounded-full ${geofence.status == "active"? "bg-green-500 text-green-500": (geofence.status == "scheduled"? "bg-yellow-500 text-yellow-500" :"bg-red-500 text-red-500")}`}></span>
                                         {/** red or green dot depending on active status*/}
-                                        <span className='text-nowrap'>{geofence.status === 'active' ? 'Active' : geofence.status === 'scheduled' ? 'Scheduled' : 'Inactive'}</span>
+                                        <span className='text-nowrap text-xs sm:text-sm md:text-base'>{geofence.status === 'active' ? 'Active' : geofence.status === 'scheduled' ? 'Scheduled' : 'Inactive'}</span>
                                         <span className="self-end ml-auto text-end">
                                             {`${parseInt(geofence.start_time.slice(11,16).split(":")[0]) + 1}:${geofence.start_time.slice(11,16).split(":")[1]}`}
                                         </span>
