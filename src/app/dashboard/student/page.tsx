@@ -29,12 +29,6 @@ const Page = () => {
     const [alertMessage, updateAlertMessage] = useState("");
     const [showAlert, updateShowAlert] = useState(false);
     
-    // const [decodedToken, setDecodedToken] = useState({
-    //     sub: '', 
-    //     username: '', 
-    //     role: 'student', 
-    //     user_matric: '', 
-    // });
     const [location, setLocation] = useState({
         latitude: 0,
         longitude: 0,
