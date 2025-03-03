@@ -32,7 +32,7 @@ const Spinner = (
         // Get token from URL Parameters
         const search = searchParams.get("token");
         token = (search as string);
-    }, []);
+    });
 
     const handleResetPassword = async (e:FormEvent) => {
         // get password value
@@ -77,39 +77,37 @@ const Spinner = (
     }
 
     return (
-        <Suspense>
-            <div id='reset-password-page' className='flex flex-col gap-5 p-12'>
-                <OpenModal hidden={!showSuccessModal}>
-                    <div className='flex flex-col gap-5 items-center p-8 text-center'>
-                        <Image src={"/success.svg"}  className="mx-auto mt-5" width={100} height={100} alt="Success-Icon"/>
-                        <h1 className="font-extrabold text-lg text-center"> Congratulations <br /> Your password has been reset successfully!</h1>
-                        <p className='text-sm'>You can login with the new password now</p>
-                        <button className="py-2 mt-8 px-4 w-full border rounded cursor-pointer
-                            transition duration-300 ease-out hover:border-green-600" 
-                            onClick={() => {
-                                updateShowSuccessModal(false);
-                                router.push("/");
-                            }}
-                        >
-                        Proceed to login
-                        </button>
-                    </div>
-                </OpenModal>
-
-                <div>
-                    <h1 className='text-2xl text-gray-600 text-center my-2 sm:text-3xl font-extrabold'>Enter your new desired password.</h1>
-                    <p className='text-xs text-center'>Once completed, your account will use this new password</p>
-                </div>
-
-                <form onSubmit={(e:FormEvent) => {e.preventDefault(); handleResetPassword(e)}} className='flex flex-col justify-around'>
-                    <input type='password' ref={passwordRef} className='input' placeholder='Enter your new password' />
-                    {error.state && <p className='text-red-500 font-bold text-sm'>{error.message}</p>}
-                    <button className='my-4 p-2 w-full bg-purple-600 text-center rounded text-white transition duration-300 ease-out hover:shadow-lg disabled:opacity-60' disabled={loading}>
-                        {loading? Spinner: "Submit"}
+        <div id='reset-password-page' className='flex flex-col gap-5 p-12'>
+            <OpenModal hidden={!showSuccessModal}>
+                <div className='flex flex-col gap-5 items-center p-8 text-center'>
+                    <Image src={"/success.svg"}  className="mx-auto mt-5" width={100} height={100} alt="Success-Icon"/>
+                    <h1 className="font-extrabold text-lg text-center"> Congratulations <br /> Your password has been reset successfully!</h1>
+                    <p className='text-sm'>You can login with the new password now</p>
+                    <button className="py-2 mt-8 px-4 w-full border rounded cursor-pointer
+                        transition duration-300 ease-out hover:border-green-600" 
+                        onClick={() => {
+                            updateShowSuccessModal(false);
+                            router.push("/");
+                        }}
+                    >
+                    Proceed to login
                     </button>
-                </form>
+                </div>
+            </OpenModal>
+
+            <div>
+                <h1 className='text-2xl text-gray-600 text-center my-2 sm:text-3xl font-extrabold'>Enter your new desired password.</h1>
+                <p className='text-xs text-center'>Once completed, your account will use this new password</p>
             </div>
-        </Suspense>
+
+            <form onSubmit={(e:FormEvent) => {e.preventDefault(); handleResetPassword(e)}} className='flex flex-col justify-around'>
+                <input type='password' ref={passwordRef} className='input' placeholder='Enter your new password' />
+                {error.state && <p className='text-red-500 font-bold text-sm'>{error.message}</p>}
+                <button className='my-4 p-2 w-full bg-purple-600 text-center rounded text-white transition duration-300 ease-out hover:shadow-lg disabled:opacity-60' disabled={loading}>
+                    {loading? Spinner: "Submit"}
+                </button>
+            </form>
+        </div>
     );
 }
 
