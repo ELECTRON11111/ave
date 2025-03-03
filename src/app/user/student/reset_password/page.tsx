@@ -65,7 +65,7 @@ const Spinner = (
         } catch (error:any) {
             console.log(error);
             updateShowSuccessModal(false);
-            updateError({state: true, message: "Session token expired."});
+            updateError({state: true, message: "Password reset link has expired. Please request for a new one."});
 
             if (error.status == 500) {
                 updateError({state: true, message: "Contact Admin courageadedara@gmail.com"});
