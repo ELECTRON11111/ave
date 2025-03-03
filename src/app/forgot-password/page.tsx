@@ -56,11 +56,12 @@ const Page = () => {
         } catch (error: any) {
             console.log(error);
             updateShowSuccessModal(false);
-            if (error.message == "Request failed with status code 404") {
-                updateError({state: true, message: error.response.data.detail});
+            updateError({state: true, message: "Session token expired."});
+
+            if (error.status == 500) {
+                updateError({state: true, message: "Contact Admin courageadedara@gmail.com"});
                 return;
             }
-            updateError({state: true, message: error.message})
         } finally {
             updateLoading(false);
         }
