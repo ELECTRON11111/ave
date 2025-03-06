@@ -152,6 +152,14 @@ const Page = () => {
 
             console.log(geofences);
 
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
+            }
+
             if (error.response.data.detail == "Could not validate user.") {
                 // alert(error.response.data.detail);
                 showAlertHandler("Sorry, your session expired");
