@@ -190,13 +190,7 @@ const Page = () => {
                     withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
-                },
-                // params: {
-                //     // getting form data not working correctly, fix this. (make this dynamic)
-                //     "fence_code": formData.fenceCode,
-                //     "lat": location.latitude,
-                //     "long": location.longitude
-                // }   
+                },  
             });
 
             updateConfirmationLoading(false);

@@ -44,8 +44,6 @@ export default function Home () {
     const admin_token = localStorage.getItem("token");
     const student_token = localStorage.getItem("student_token");
 
-    console.log(admin_token, student_token);
-
     if (admin_token || student_token) router.replace(`${admin_token? "/dashboard/admin": "/dashboard/student"}`);
   }, []);
 

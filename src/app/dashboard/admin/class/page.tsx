@@ -93,7 +93,8 @@ const Page = () => {
                     "Content-Type": "application/json"
                 }
             });
-            // console.log(response);
+            console.log(response);
+
             if (response.data.attendance && Array.isArray(response.data.attendance)) {
                 //  if its not a string, its an array
                 const classRecordString = `${classData.name} attendance records`;
@@ -109,6 +110,14 @@ const Page = () => {
         } catch (error:any) {
             if (error.response.data.detail !== undefined) {
                 divRef.current.textContent = error.response.data.detail;
+
+                if (error.status = 401) {
+                    // Session has expired, Redirect to the login page
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("admin_token");
+    
+                    router.push("/");
+                }    
 
                 if (error.response.data.detail.includes("not validate user") || error.response.data.detail.includes("Not enough permissions")) {
                     // Show Alert component
@@ -157,6 +166,14 @@ const Page = () => {
         } catch (error:any) {
             console.log(error);
             updateEndClassLoading(false);
+
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
+            }
             
             if (error.response.data.detail.includes("not validate user")) {
                 // Show Alert component
