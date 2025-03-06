@@ -225,6 +225,14 @@ function Admin_dashboard() {
 
             if (!error.response.data) return
 
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
+            }
+
             if (error.response.data?.detail?.includes("not validate user") || error.response.data.detail?.includes("Not enough permissions")) {
                 // alert(error.response.data.detail); Show error alert
                 updateAlertMessage("Sorry, your session expired.");
@@ -287,19 +295,18 @@ function Admin_dashboard() {
             updateClassStartedLoading(false);
             console.log(error.response.data.detail);
 
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
+            }
+
             if (!error.response.data) {
                 updateError({message: "Newtwork Error, please check your network", state: true});
                 updateIsSessionExpired(true);
                 return;
-            }
-
-            if (error.response.data.detail.includes("not validate user")) {
-                // alert(error.response.data.detail);
-                // Delete the token
-                localStorage.removeItem('token');
-                
-                updateAlertMessage("Sorry, your session expired");
-                updateShowAlert(true); 
             }
         }
     }
