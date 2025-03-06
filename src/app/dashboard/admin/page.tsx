@@ -273,7 +273,9 @@ function Admin_dashboard() {
             
             router.push('/dashboard/admin/class');
             const now = startTime;
-            localStorage.setItem("classData", JSON.stringify({...response.data, date: now}));
+
+            // There needs to be a class active status saved too
+            localStorage.setItem("classData", JSON.stringify({...response.data, active: true, date: now}));
         } catch (error:any) {
             // console.error(error);
             if (error.response.data.detail) {
