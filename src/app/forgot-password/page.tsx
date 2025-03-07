@@ -62,6 +62,14 @@ const Page = () => {
                 updateError({state: true, message: "Contact Admin courageadedara@gmail.com"});
                 return;
             }
+
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
+            }
         } finally {
             updateLoading(false);
         }

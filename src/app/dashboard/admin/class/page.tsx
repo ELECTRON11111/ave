@@ -174,12 +174,6 @@ const Page = () => {
 
                 router.push("/");
             }
-            
-            if (error.response.data.detail.includes("not validate user")) {
-                // Show Alert component
-                updateShowAlert(true);
-                updateAlertMessage("Sorry, your session expired.");
-            }
         }
     }
      

@@ -233,14 +233,6 @@ function Admin_dashboard() {
                 router.push("/");
             }
 
-            if (error.response.data?.detail?.includes("not validate user") || error.response.data.detail?.includes("Not enough permissions")) {
-                // alert(error.response.data.detail); Show error alert
-                updateAlertMessage("Sorry, your session expired.");
-                updateShowAlert(true);
-
-                // Delete the token
-                localStorage.removeItem('token');
-            }
         }
     }
 
