@@ -160,10 +160,6 @@ const Page = () => {
                 router.push("/");
             }
 
-            if (error.response.data.detail == "Could not validate user.") {
-                // alert(error.response.data.detail);
-                showAlertHandler("Sorry, your session expired");
-            }
         }
     }
 
@@ -223,6 +219,14 @@ const Page = () => {
             updateConfirmationLoading(false);
             // console.log(error)
 
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
+            }
+
             if (error.message.toLowerCase().includes("network")) {
                 updateConfirmationSuccess({state: false, message: "", caution: false});
                 updateConfirmationError({state: true, message: error.message});
@@ -238,23 +242,9 @@ const Page = () => {
                 return;
             }
 
-            if (error.response.data.detail.includes("Not enough permissions")) {
-                updateConfirmationSuccess({state: false, message: "", caution: false});
-                updateConfirmationError({state: true, message: error.response.data.detail});
-
-                // setTimeout(() => router.push("/#login"), 4000);
-            }
-
+            
             updateConfirmationSuccess({state: false, message: "", caution: false});
             updateConfirmationError({state: true, message: error.response.data.detail});
-            // console.log(error.response.data.detail);
-            
-            if (error.response.data.detail == "Could not validate user.") {
-                // alert(error.response.data.detail);
-                
-                showAlertHandler("Sorry, your session expired.");
-            }
-
             updateConfirmButtonClicked(true);
         }
     }
