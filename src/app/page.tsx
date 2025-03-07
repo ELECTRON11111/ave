@@ -45,7 +45,7 @@ export default function Home () {
     const student_token = localStorage.getItem("student_token");
 
     if (admin_token || student_token) router.replace(`${admin_token? "/dashboard/admin": "/dashboard/student"}`);
-  });
+  }, []);
 
   const spanClickHandler = (newState:boolean) => {
     changeIsStudent(newState);
@@ -75,10 +75,6 @@ export default function Home () {
       updateSubmitDisabled(false);
 
       console.log(response);
-
-      // Store session token as cookie
-      // document.cookie = `session_token=${response.data.session_token}; Max-Age=86400; Path=/; SameSite=Lax; Secure`;
-      // console.log("Cookie set:", document.cookie) // verifying cookie's presence
       
       // update token variable
       if (typeof response !== 'undefined') {
@@ -181,6 +177,7 @@ export default function Home () {
       </form>
 
       <p className="my-2 text-md">Don&apos;t have an account? <Link href={"/signup"} className="font-light underline">   Sign Up</Link></p>
+      <p className="my-2 text-md">Forgotten Password? <Link href={"/forgot-password"} className="font-light underline">   Reset Password</Link></p>
     </div>
   )
 }

@@ -14,6 +14,8 @@ import process from "process"
 const Page = () => {
     const [username, updateUsername] = useState("");
     const [loading, updateLoading] = useState(true);
+    const [logoutLoading, updateLogoutLoading] = useState(false);
+    const [logoutError, updateLogoutError] = useState({state: false, message: ""}); 
     const [confirmButtonClicked, updateConfirmButtonClicked] = useState(false);
     const [confirmationLoading, updateConfirmationLoading] = useState(false);
     const [confirmationError, updateConfirmationError] = useState({state: false, message: ""});
@@ -27,12 +29,6 @@ const Page = () => {
     const [alertMessage, updateAlertMessage] = useState("");
     const [showAlert, updateShowAlert] = useState(false);
     
-    // const [decodedToken, setDecodedToken] = useState({
-    //     sub: '', 
-    //     username: '', 
-    //     role: 'student', 
-    //     user_matric: '', 
-    // });
     const [location, setLocation] = useState({
         latitude: 0,
         longitude: 0,
@@ -156,10 +152,14 @@ const Page = () => {
 
             console.log(geofences);
 
-            if (error.response.data.detail == "Could not validate user.") {
-                // alert(error.response.data.detail);
-                showAlertHandler("Sorry, your session expired");
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
             }
+
         }
     }
 
@@ -186,13 +186,7 @@ const Page = () => {
                     withCredentials: true,
                 headers: {
                     "Content-Type": "application/json",
-                },
-                // params: {
-                //     // getting form data not working correctly, fix this. (make this dynamic)
-                //     "fence_code": formData.fenceCode,
-                //     "lat": location.latitude,
-                //     "long": location.longitude
-                // }   
+                },  
             });
 
             updateConfirmationLoading(false);
@@ -225,6 +219,14 @@ const Page = () => {
             updateConfirmationLoading(false);
             // console.log(error)
 
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
+            }
+
             if (error.message.toLowerCase().includes("network")) {
                 updateConfirmationSuccess({state: false, message: "", caution: false});
                 updateConfirmationError({state: true, message: error.message});
@@ -240,23 +242,9 @@ const Page = () => {
                 return;
             }
 
-            if (error.response.data.detail.includes("Not enough permissions")) {
-                updateConfirmationSuccess({state: false, message: "", caution: false});
-                updateConfirmationError({state: true, message: error.response.data.detail});
-
-                // setTimeout(() => router.push("/#login"), 4000);
-            }
-
+            
             updateConfirmationSuccess({state: false, message: "", caution: false});
             updateConfirmationError({state: true, message: error.response.data.detail});
-            // console.log(error.response.data.detail);
-            
-            if (error.response.data.detail == "Could not validate user.") {
-                // alert(error.response.data.detail);
-                
-                showAlertHandler("Sorry, your session expired.");
-            }
-
             updateConfirmButtonClicked(true);
         }
     }
@@ -274,10 +262,33 @@ const Page = () => {
         updateFormData(prevState => ({...prevState, [name]: value}));
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        updateLogoutLoading(true);
+
         // delete the token and redirect user back to the home page
         localStorage.removeItem("student_token");
-        router.push("/#login");
+
+        // call logout endpoint
+        try {
+            const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/logout`, {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            console.log(response);
+            // change error state
+            updateLogoutError({state: false, message: ""});
+
+            // redirect user to login screen
+            router.push("/#login");
+
+        } catch (error) {
+            console.log(error);
+            updateLogoutError({state: true, message: "An error occurred while logging out, please try again."});
+        } finally {
+            updateLogoutLoading(false);
+        }
     }
 
     const geofenceSearchHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -374,9 +385,10 @@ const Page = () => {
             {/* LOGOUT MODAL */}
             <OpenModal hidden = {!showLogoutModal}>
                 <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm'>
-                    <h1 className='font-bold text-xl text-black text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
-                    <div className='flex gap-3 justify-center w-full md:scale-125'>
-                        <button 
+                    <h1 className='font-bold text-xl text-gray-700 text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
+                    <div className={`flex gap-3 justify-center w-full md:scale-125 ${logoutError.state && "flex-col sm:px-6"} ${logoutLoading && logoutError.state? "items-center": ""}`}>
+                        {logoutError.state && <div className="text-red-500 text-center self-center font-bold text-sm">{logoutError.message}</div>}
+                        {logoutLoading ? Spinner: (<><button 
                             onClick={() => handleLogout()}
                             className='text-red-500 border border-red-500 px-3 py-2 rounded hover-effect hover:text-white hover:bg-red-500'
                         >
@@ -387,7 +399,7 @@ const Page = () => {
                             className='text-green-500 border border-green-500 px-3 py-2 rounded hover-effect hover:text-white hover:bg-green-500'
                         >
                             No, go back
-                        </button>
+                        </button></>)}
                     </div>
                 </div>
             </OpenModal>

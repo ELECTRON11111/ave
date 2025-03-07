@@ -23,6 +23,8 @@ function Admin_dashboard() {
     const [isSessionExpired, updateIsSessionExpired] = useState(false);
     const [NavHidden, changeNavHidden] = useState(true);
     const [classStarted, updateClassStarted] = useState(false);
+    const [logoutLoading, updateLogoutLoading] = useState(false);
+    const [logoutError, updateLogoutError] = useState({state: false, message: ""}); 
     const [loading, updateLoading] = useState(false);
     const [geofences, updateGeofences] = useState([]);
     const [geofencesByThisAdmin, updateGeofencesByThisAdmin] = useState([]);
@@ -223,14 +225,14 @@ function Admin_dashboard() {
 
             if (!error.response.data) return
 
-            if (error.response.data?.detail?.includes("not validate user") || error.response.data.detail?.includes("Not enough permissions")) {
-                // alert(error.response.data.detail); Show error alert
-                updateAlertMessage("Sorry, your session expired.");
-                updateShowAlert(true);
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
 
-                // Delete the token
-                localStorage.removeItem('token');
+                router.push("/");
             }
+
         }
     }
 
@@ -271,7 +273,9 @@ function Admin_dashboard() {
             
             router.push('/dashboard/admin/class');
             const now = startTime;
-            localStorage.setItem("classData", JSON.stringify({...response.data, date: now}));
+
+            // There needs to be a class active status saved too
+            localStorage.setItem("classData", JSON.stringify({...response.data, active: true, date: now}));
         } catch (error:any) {
             // console.error(error);
             if (error.response.data.detail) {
@@ -283,19 +287,18 @@ function Admin_dashboard() {
             updateClassStartedLoading(false);
             console.log(error.response.data.detail);
 
+            if (error.status = 401) {
+                // Session has expired, Redirect to the login page
+                localStorage.removeItem("token");
+                localStorage.removeItem("admin_token");
+
+                router.push("/");
+            }
+
             if (!error.response.data) {
                 updateError({message: "Newtwork Error, please check your network", state: true});
                 updateIsSessionExpired(true);
                 return;
-            }
-
-            if (error.response.data.detail.includes("not validate user")) {
-                // alert(error.response.data.detail);
-                // Delete the token
-                localStorage.removeItem('token');
-                
-                updateAlertMessage("Sorry, your session expired");
-                updateShowAlert(true); 
             }
         }
     }
@@ -310,11 +313,33 @@ function Admin_dashboard() {
         router.push('/dashboard/admin/class');
     }
 
-    const handleLogout = () => {
+    const handleLogout = async () => {
+        updateLogoutLoading(true);
         // delete the token and redirect user back to the home page
         localStorage.removeItem("token");
         localStorage.removeItem("admin_token");
-        router.push("/#login");
+
+        // call logout endpoint
+        try {
+            const response = await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/logout`, {
+                withCredentials: true,
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            });
+            console.log(response);
+            // change error state
+            updateLogoutError({state: false, message: ""});
+
+            // redirect user to login screen
+            router.push("/#login");
+
+        } catch (error) {
+            console.log(error);
+            updateLogoutError({state: true, message: "An error occurred while logging out, please try again."});
+        } finally {
+            updateLogoutLoading(false);
+        }
     }
 
     return (
@@ -380,9 +405,10 @@ function Admin_dashboard() {
             {/* LOGOUT MODAL */}
             <OpenModal hidden = {!showLogoutModal}>
                 <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm'>
-                    <h1 className='font-bold text-xl text-black text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
-                    <div className='flex gap-3 justify-center w-full md:scale-125'>
-                        <button 
+                    <h1 className='font-bold text-xl text-gray-700 text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
+                    <div className={`flex gap-3 justify-center w-full md:scale-125 ${logoutError.state && "flex-col sm:px-6"} ${logoutLoading && logoutError.state? "items-center": ""}`}>
+                        {logoutError.state && <div className="text-red-500 text-center self-center font-bold text-sm">{logoutError.message}</div>}
+                        {logoutLoading ? Spinner: (<><button 
                             onClick={() => handleLogout()}
                             className='text-red-500 border border-red-500 px-3 py-2 rounded hover-effect hover:text-white hover:bg-red-500'
                         >
@@ -393,7 +419,7 @@ function Admin_dashboard() {
                             className='text-green-500 border border-green-500 px-3 py-2 rounded hover-effect hover:text-white hover:bg-green-500'
                         >
                             No, go back
-                        </button>
+                        </button></>)}
                     </div>
                 </div>
             </OpenModal>
