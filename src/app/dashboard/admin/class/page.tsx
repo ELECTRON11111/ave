@@ -84,12 +84,10 @@ const Page = () => {
         updateRefreshListLoading(true);
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/get_attendances`, { params: {
-                    "course_title": classData.name,
-                    "date": classData.date.slice(0,10)
+                    "fence_code": classData.Code,
                 }, 
                 withCredentials: true,
                 headers: {
-                    "Authorization": `Bearer ${token}`,
                     "Content-Type": "application/json"
                 }
             });
