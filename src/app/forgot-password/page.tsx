@@ -59,7 +59,7 @@ const Page = () => {
             updateError({state: true, message: "Session token expired."});
 
             if (error.status == 500) {
-                updateError({state: true, message: "Contact Admin courageadedara@gmail.com"});
+                updateError({state: true, message: "An error occured, contact Admin courageadedara@gmail.com"});
                 return;
             }
 

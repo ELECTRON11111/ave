@@ -233,6 +233,11 @@ function Admin_dashboard() {
                 router.push("/");
             }
 
+            if (error.status == 500) {
+                updateError({state: true, message: "An error occured, contact Admin courageadedara@gmail.com"});
+                return;
+            }
+
         }
     }
 
@@ -293,6 +298,11 @@ function Admin_dashboard() {
                 localStorage.removeItem("admin_token");
 
                 router.push("/");
+            }
+
+            if (error.status == 500) {
+                updateError({state: true, message: "An error occured, contact Admin courageadedara@gmail.com"});
+                return;
             }
 
             if (!error.response.data) {

@@ -129,7 +129,7 @@ const Page = () => {
 
             console.log(error);
             updateRefreshListLoading(false);
-            
+
             if (error.response.data.detail.includes("not validate user") || error.response.data.detail.includes("Not enough permissions")) {
                 updateShowAlert(true);
                 updateAlertMessage("Sorry, your session expired.");

@@ -68,7 +68,7 @@ const Spinner = (
             updateError({state: true, message: "Password reset link has expired. Please request for a new one."});
 
             if (error.status == 500) {
-                updateError({state: true, message: "Contact Admin courageadedara@gmail.com"});
+                updateError({state: true, message: "An error occured, contact Admin courageadedara@gmail.com"});
                 return;
             }
 

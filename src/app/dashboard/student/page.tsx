@@ -227,6 +227,11 @@ const Page = () => {
                 router.push("/");
             }
 
+            if (error.status == 500) {
+                updateConfirmationError({state: true, message: "An error occured, contact Admin courageadedara@gmail.com"});
+                return;
+            }
+
             if (error.message.toLowerCase().includes("network")) {
                 updateConfirmationSuccess({state: false, message: "", caution: false});
                 updateConfirmationError({state: true, message: error.message});
@@ -283,9 +288,14 @@ const Page = () => {
             // redirect user to login screen
             router.push("/#login");
 
-        } catch (error) {
+        } catch (error:any) {
             console.log(error);
             updateLogoutError({state: true, message: "An error occurred while logging out, please try again."});
+
+            if (error.status == 500) {
+                updateLogoutError({state: true, message: "An error occured, contact Admin courageadedara@gmail.com"});
+                return;
+            }
         } finally {
             updateLogoutLoading(false);
         }

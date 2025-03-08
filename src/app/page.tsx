@@ -111,6 +111,11 @@ export default function Home () {
         updateAlertMessage("An error occured. Please try again.");
       }
 
+      if (error.status == 500) {
+        updateError({state: true, message: "An error occured, contact Admin courageadedara@gmail.com"});
+        return;
+      }
+
       updateSubmitDisabled(false);
     }
   }
