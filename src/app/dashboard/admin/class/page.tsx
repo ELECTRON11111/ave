@@ -17,6 +17,7 @@ const Page = () => {
     const [endClassLoading, updateEndClassLoading] = useState(false);
     const [alertMessage, updateAlertMessage] = useState("");
     const [showAlert, updateShowAlert] = useState(false);
+    const [error, updateError] = useState({state: false, message: ""});
 
     // Div reference showing no attendance records.
     const divRef: any = useRef();
@@ -159,19 +160,19 @@ const Page = () => {
 
             // Show alert component
             updateShowAlert(true);
-            updateAlertMessage(response.data);
+            updateAlertMessage(response.data.message);
             if (showAlert !== false) router.back();
         } catch (error:any) {
             console.log(error);
             updateEndClassLoading(false);
 
             if (error.status = 401) {
-                // Session has expired, Redirect to the login page
-                localStorage.removeItem("token");
-                localStorage.removeItem("admin_token");
+                // Here the response comes back as forbidden, 403 but with a status code of 401
+                updateError({state: true, message: error.response.data.detail});
 
-                router.push("/");
-            }
+                // when class is already inactive, update classData state to have active to false
+                updateClassData((prevClassData: any): any => {return {...prevClassData, active: false}});
+            }   
         }
     }
      
@@ -211,6 +212,8 @@ const Page = () => {
                     </button>
                 </div>
 
+                {error.state && <p>{error.message}</p>}
+
                 <header className='text-lg py-4 pb-0 text-purple-500 font-bold text-center'>ATTENDANCE LIST FOR THE CLASS</header>
  
                 <p className='text-center py-2 pb-4'>(Refresh to see updated list)</p>
@@ -228,7 +231,8 @@ const Page = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {attendanceList.length !== 0? attendanceList.map((student:any, index) => (
+                            {/* only render if attendance list comes back as an array and is not empty */}
+                            {Array.isArray(attendanceList) && attendanceList.length !== 0? attendanceList.map((student:any, index) => (
                                 <tr key={index}>
                                     <td className='border px-4 py-2'>{index + 1}</td>
                                     <td className='border px-4 py-2'>{student.username}</td>
