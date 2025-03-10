@@ -8,7 +8,7 @@ interface AlertProps {
 
 const Alert: React.FC<AlertProps> = ({ message, show, closeAlert,}) => {
   return (
-    <div id="alert" className={`w-full fixed h-screen px-6 z-[1000] top-0 left-0 flex justify-center items-center overflow-hidden
+    <div id="alert" className={`w-full fixed h-screen px-6 z-[1000] text-center top-0 left-0 flex justify-center items-center overflow-hidden
     bg-[rgba(0, 0, 0, 0.4)] backdrop-brightness-50 cursor-pointer ${show? "": "hidden"} `} onClick={closeAlert}>
         <div id="alert-content" className="py-8 px-6 flex flex-col gap-6 bg-white rounded-lg ">
             <h1 className="text-xl md:text-4xl font-bold text-gray-600">{message}</h1>
