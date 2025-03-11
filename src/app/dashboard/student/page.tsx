@@ -16,6 +16,7 @@ const Page = () => {
     const [loading, updateLoading] = useState(true);
     const [logoutLoading, updateLogoutLoading] = useState(false);
     const [logoutError, updateLogoutError] = useState({state: false, message: ""}); 
+    const [networkError, updateNetworkError] = useState(false);
     const [confirmButtonClicked, updateConfirmButtonClicked] = useState(false);
     const [confirmationLoading, updateConfirmationLoading] = useState(false);
     const [confirmationError, updateConfirmationError] = useState({state: false, message: ""});
@@ -132,6 +133,7 @@ const Page = () => {
 
     async function getGeofencesHandler() {
         updateLoading(true);
+        updateNetworkError(false);
         // fetch geofences from server
         try {
             const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/geofence/get_geofences`, { 
@@ -152,12 +154,16 @@ const Page = () => {
 
             console.log(geofences);
 
-            if (error.status = 401) {
+            if (error.status == 401 && error.message != "Network Error") {
                 // Session has expired, Redirect to the login page
                 localStorage.removeItem("token");
                 localStorage.removeItem("admin_token");
 
                 router.push("/");
+            }
+
+            if (error.message.toLowerCase() == "network error") {
+                updateNetworkError(true);
             }
 
         }
@@ -216,10 +222,20 @@ const Page = () => {
             updateConfirmButtonClicked(true);
 
         } catch (error: any) {
+            updateConfirmButtonClicked(true);
             updateConfirmationLoading(false);
-            // console.log(error)
+            console.log(error);
 
-            if (error.status = 401) {
+            if (error.status == 403 || error.response.status == 403) {
+                // forbidden response state
+                updateConfirmationSuccess({state: false, message: "", caution: false});
+                updateConfirmationError({state: true, message: error.response.data.detail});
+                updateConfirmButtonClicked(true);
+
+                return;
+            }
+
+            if (error.status == 401 && error.message.toLowerCase().includes("session")) {
                 // Session has expired, Redirect to the login page
                 localStorage.removeItem("token");
                 localStorage.removeItem("admin_token");
@@ -331,14 +347,27 @@ const Page = () => {
         });
     
         updateGeofences(updatedGeofences);
-    };    
+    };   
+    
+    const handleGeofenceClicked = (geofence: any) => {
+        updateShowModal(true); 
+        updateSelectedGeofenceData({...geofence});
+
+        if (geofence.status == "inactive") {
+            updateConfirmationSuccess({state: false, message: "", caution: false});
+            updateConfirmationError({state: true, message: "The geofence you have selected is currently inactive"});
+            updateConfirmButtonClicked(true);
+
+            return;
+        }
+    }
     
 
     return (
         <div id='Student-dashboard-page' className='p-4 flex font-body flex-col py-16'>
             <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(false); localStorage.removeItem("student_token"); router.push("/#login")}}/>
             <Modal show={showModal} modalClosed= {() => updateShowModal(false)}>     
-                {confirmButtonClicked == false
+                {confirmButtonClicked == false && selectedGeofenceData.status === "active"
                     ? (<div className="flex flex-col items-center justify-center w-full h-full py-4 px-6 gap-5 rounded">
                             <h1 className="text-2xl font-bold text-center">Enter the class fence code.</h1>
 
@@ -360,7 +389,7 @@ const Page = () => {
                             }
                         </div>)
                     :(
-                        <div className='flex flex-col gap-4 items-center text-center py-8 px-4'>
+                        <div className='flex flex-col gap-4 items-center text-center py-4 px-2'>
                             {confirmationSuccess.state && confirmationSuccess.caution?
                                 <Image src="/caution.svg" className="mx-auto mt-5" width={50} height={50} alt="caution-icon"/>
                                 :<Image src={confirmationError.state? "/warning.svg" :"/success.svg"} className="mx-auto mt-5" width={50} height={50} alt="error-icon"/>
@@ -441,7 +470,7 @@ const Page = () => {
                     : (<div id='fences_list' className='w-full relative grid grid-cols-2 gap-4 md:grid-cols-4'>
                         {typeof(geofences) !== "undefined" && geofences.length !== 0 ? geofences.map((geofence:any, index) => (
                             <div key={index} 
-                                onClick={() => {updateShowModal(true); updateSelectedGeofenceData({...geofence})}}  // record attendance when a class card is clicked
+                                onClick={() => handleGeofenceClicked(geofence)}  // record attendance when a class card is clicked
                                 className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%]'
                             >
                                 <div id='top-geofence-card' className='flex justify-between items-center'>
@@ -462,7 +491,10 @@ const Page = () => {
                             </div>
                         )): <div className='p-12 text-lg absolute flex flex-col gap-4'>
                                 <img src='/sad-girl.svg' />
-                                <h3 className='text-sm text-center'>Sorry, there are no active classes at the moment</h3>
+                                {networkError?
+                                    <h3 className='font-bold text-red-500 text-sm text-center'>There was a network error. <br /> Check your connection and try again.</h3>
+                                    :<h3 className='text-sm text-center'>Sorry, there are no active classes at the moment</h3>
+                                }
                             </div>}
 
                     </div>)
