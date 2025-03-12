@@ -443,7 +443,7 @@ function Admin_dashboard() {
 
                 <div id="left-of-section" className="flex flex-col gap-5 mx-10">
                     <div className="flex gap-2 items-center justify-center">
-                        <h1 className="text-3xl font-bold">Hello there, <span className="text-purple-700 pl-1">{username}</span>.</h1>
+                        <h1 className="text-3xl font-bold dark:text-neutral-300">Hello there, <span className="text-purple-700 pl-1">{username}</span>.</h1>
                         <Image src= "/pngwing.com.png" width={"34"} height={"34"} alt="crown"/>
                     </div>
 
@@ -452,7 +452,7 @@ function Admin_dashboard() {
                     <ul className="list-disc">
                         <li>Start a class.</li>
                         <li>Unique class code is generated.</li>
-                        <li>Choose geofence radius.</li>
+                        <li>Specify geofence radius.</li>
                         <li>See students attendace and end session.</li>
                     </ul>
                 </div>
