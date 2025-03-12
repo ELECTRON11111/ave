@@ -44,10 +44,18 @@ export default function Home () {
     // set preferred theme
     const darkModeFromLocalStorage = JSON.parse(localStorage.getItem("darkMode") as string);
     if (darkModeFromLocalStorage != undefined) {
-      darkModeFromLocalStorage? document.body.classList.add("dark"): document.body.classList.remove("dark");
+      if (darkModeFromLocalStorage) {
+        document.body.classList.add("dark")
+      } else {
+        document.body.classList.remove("dark");
+      } 
     } else {
       const isDarkModeOn = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
-      isDarkModeOn ? document.body.classList.add('dark'): document.body.classList.remove('dark');
+      if (isDarkModeOn) {
+        document.body.classList.add('dark')
+      } else {
+        document.body.classList.remove('dark');
+      } 
     }
 
     // check for user tokens
