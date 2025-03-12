@@ -76,14 +76,14 @@ const Page = () => {
     }
 
     return (
-        <div id='forgot-password-page' className='flex flex-col gap-5 p-12'>
+        <div id='forgot-password-page' className='flex flex-col gap-5 p-12 min-h-screen dark:bg-gray-900 dark:text-gray-400'>
             <OpenModal hidden={!showSuccessModal}>
-                <div className='flex flex-col gap-5 items-center p-8 text-center'>
+                <div className='flex flex-col gap-5 items-center p-8 text-center dark:bg-gray-800 dark:text-gray-300'>
                     <Image src={"/success.svg"}  className="mx-auto mt-5" width={100} height={100} alt="Success-Icon"/>
-                    <h1 className="font-extrabold text-lg text-center"> A mail has been sent to your specified email successfully!</h1>
+                    <h1 className="font-extrabold text-lg text-center dark:text-gray-200"> A mail has been sent to your specified email successfully!</h1>
                     <p className='text-sm'>Click the link from your mail to reset password</p>
                     <button className="py-2 mt-8 px-4 w-full border rounded cursor-pointer
-                        transition duration-300 ease-out hover:border-green-600" 
+                        transition duration-300 ease-out hover:border-green-600 hover:text-green-500" 
                         onClick={() => {
                             updateShowSuccessModal(false);
                         }}
@@ -94,14 +94,18 @@ const Page = () => {
             </OpenModal>
 
             <div>
-                <h1 className='text-2xl text-gray-600 text-center my-2 sm:text-3xl font-extrabold'>Enter your account&apos;s email address</h1>
+                <h1 className='text-2xl text-gray-600 text-center my-2 sm:text-3xl font-extrabold dark:text-gray-300'>Enter your account&apos;s email address</h1>
                 <p className='text-xs text-center'>A link would be sent to your email for password reset</p>
             </div>
 
             <form onSubmit={(e:FormEvent) => {e.preventDefault(); handleForgotPassword(e)}} className='flex flex-col justify-around'>
                 <input type='email' ref={emailInputRef} className='input' placeholder='Enter your email address' />
                 {error.state && <p className='text-red-500 font-bold text-sm'>{error.message}</p>}
-                <button className='my-4 p-2 w-full bg-purple-600 text-center rounded text-white transition duration-300 ease-out hover:shadow-lg disabled:opacity-60' disabled={loading}>
+                
+                <button 
+                    className='my-4 p-2 w-full bg-purple-600 text-center rounded text-white transition duration-300 ease-out hover:shadow-lg disabled:opacity-60 dark:bg-purple-700 dark:hover:bg-purple-800' 
+                    disabled={loading}
+                >
                     {loading? Spinner: "Submit"}
                 </button>
             </form>
