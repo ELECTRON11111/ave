@@ -152,7 +152,7 @@ export default function Signup():any {
     }
      
     return (
-        <div id="login" className="w-full bg-white p-4 py-8 md:flex md:flex-col md:justify-center md:px-60 md:pb-16">
+        <div id="signup" className="w-full bg-white p-4 py-8 md:flex md:flex-col md:justify-center md:px-60 md:pb-16 dark:bg-gray-900 dark:text-gray-400">
             <Modal show={showModal} modalClosed = {() => updateShowModal(false)}>
                 <div className="text-red h-[60vh] my-4 gap-5 mx-2 flex flex-col items-center">
                     <Image src={wasPostSuccessful? "/success.svg" :"/warning.svg"} className="mx-auto mt-5" width={50} height={50} alt="error-icon"/>
@@ -171,7 +171,7 @@ export default function Signup():any {
 
                     {wasPostSuccessful?     
                         <button className="py-2 px-4 w-full border rounded mt-auto cursor-pointer
-                        transition duration-300 ease-out hover:border-green-600" 
+                        transition duration-300 ease-out hover:border-green-600 hover:text-green-600" 
                         onClick={() => {
                             // restore defaults
                             updateShowModal(false); 
@@ -181,16 +181,16 @@ export default function Signup():any {
                             router.push(`/#login`);
                         }}>Proceed to login.</button>
                         : <button className="py-2 px-4 w-full border rounded mt-auto cursor-pointer
-                        transition duration-300 ease-out hover:border-red-600" 
+                        transition duration-300 ease-out hover:text-red-600 hover:border-red-600" 
                         onClick={() => {updateShowModal(false); updateWasPostSuccessful(false)}}>Close</button>
                     }
                 </div>
             </Modal>
 
             <div id="head" className="my-8">
-                <h1 className="my-2 text-3xl md:text-center">Sign Up with AVE.</h1>
+                <h1 className="my-2 text-3xl md:text-center dark:text-gray-200">Sign Up with AVE.</h1>
                 <h1 className="text-purple-600 md:text-center">
-                    Input your details <span className="hidden sm:inline">||</span><br className="sm:hidden"/> Create an admin/student account.
+                    Input your details <span className="hidden sm:inline">||</span><br className="sm:hidden"/> Create an admin / student account.
                 </h1>
             </div>
             
@@ -202,8 +202,8 @@ export default function Signup():any {
                 <input type="password" className="input" onChange = {(e: ChangeEvent<HTMLInputElement>) => handleConfirmPassword(e)} placeholder="Confirm Password" />
 
                 {
-                    passwordErrorState ? <p className="text-red-700 text-sm">Passwords do not match.</p>
-                                : <p className="text-green-700 text-sm">Passwords match, continue ..</p>
+                    passwordErrorState ? <p className="text-red-700 text-sm dark:font-extrabold">Passwords do not match.</p>
+                                : <p className="text-green-700 text-sm dark:font-extrabold">Passwords match, continue ..</p>
                 } 
 
                 <select name="role" defaultValue={"student"} onChange = {(e: ChangeEvent<any>) => handleChange(e)} id="role" className="input text-gray-400">
@@ -216,11 +216,12 @@ export default function Signup():any {
                     <span> I agree to the <Link href={"#"} className="font-light underline">terms and Conditions.</Link></span>
                 </div>
                 
-                <button type="submit" className={`${formData.areTermsAgreed && !errorState? "opacity-100": "opacity-60"} my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg`} disabled={!(formData.areTermsAgreed && !errorState)}>
+                <button type="submit" className={`${formData.areTermsAgreed && !errorState? "opacity-100": "opacity-60"} my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg dark:bg-purple-700 dark:hover:bg-purple-800`} 
+                disabled={!(formData.areTermsAgreed && !errorState)}>
                     {loading ? Spinner: "Submit"}
                 </button>
                 
-                {errorState? <p className="text-md text-red-700">Please fill all form inputs.</p>: ""}
+                {errorState? <p className="text-md text-red-700 dark:font-extrabold">Please fill all form fields.</p>: ""}
             </form>
 
             <p className="my-2 text-md">Already have an account? <Link href={"/#login"} className="font-light underline">   Log In</Link></p>
