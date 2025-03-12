@@ -14,7 +14,8 @@ const AuthenticatedNav = (props: {handleLogout: () => void}) => {
         containsDarkClass? setDarkModeState(true): setDarkModeState(false);
         
         // save state to localStorage
-        localStorage.setItem("darkMode", JSON.stringify(darkModeState));
+        const darkModeStateForLocalStorage = JSON.stringify(darkModeState);
+        localStorage.setItem("darkMode", darkModeStateForLocalStorage);
     }, [darkModeState]);
 
     return (

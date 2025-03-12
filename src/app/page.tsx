@@ -42,9 +42,9 @@ export default function Home () {
 
   useEffect(() => {
     // set preferred theme
-    const darkModeFromLocalStorage = localStorage.getItem("darkMode");
+    const darkModeFromLocalStorage = JSON.parse(localStorage.getItem("darkMode") as string);
     if (darkModeFromLocalStorage != undefined) {
-      JSON.parse(darkModeFromLocalStorage)? document.body.classList.add("dark"): document.body.classList.remove("dark");
+      darkModeFromLocalStorage? document.body.classList.add("dark"): document.body.classList.remove("dark");
     } else {
       const isDarkModeOn = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
       isDarkModeOn ? document.body.classList.add('dark'): document.body.classList.remove('dark');
