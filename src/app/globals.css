@@ -4,9 +4,12 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  @apply transition-colors duration-100
+}
 
 .input {
-  @apply border my-3 p-2 rounded border-purple-500 active:border-purple-500 focus:border-purple-500
+  @apply border my-3 p-2 rounded border-purple-500 active:border-purple-500 focus:border-purple-500 dark:bg-gray-800 dark:text-gray-300 dark:border-2 active:dark:bg-gray-800
 }
 
 .li {

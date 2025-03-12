@@ -2,7 +2,6 @@
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import Modal from "@/components/Model/Model";
-import { jwtDecode } from "jwt-decode";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
@@ -11,7 +10,6 @@ import OpenModal from "@/components/OpenModal/OpenModal";
 import AuthenticatedNav from "@/components/AuthenticatedNav/AuthenticatedNav";
 import { DateTime, Duration } from "luxon";
 import process from "process";
-import { start } from "repl";
 
 function Admin_dashboard() {
     // Get user co-ordinates here, take longitude and latitude
@@ -21,6 +19,7 @@ function Admin_dashboard() {
     });
     const [username, updateUsername] = useState("");
     const [isSessionExpired, updateIsSessionExpired] = useState(false);
+    const [isDarkMode, updateDarkMode] = useState(false);
     const [NavHidden, changeNavHidden] = useState(true);
     const [classStarted, updateClassStarted] = useState(false);
     const [logoutLoading, updateLogoutLoading] = useState(false);
@@ -81,6 +80,12 @@ function Admin_dashboard() {
         // Get geolocation
         getGeolocation();
     }, [isSessionExpired]);
+
+    useEffect(() => {
+        // check state of dark mode
+        const isDarkMode = document.body.classList.contains('dark');
+        updateDarkMode(isDarkMode);
+    })
 
     const burgerClickedHandler = (e: any) => {
         e.preventDefault();
@@ -223,9 +228,13 @@ function Admin_dashboard() {
             console.log(error);
             updateLoadingActiveClasses(false);
 
-            if (!error.response.data) return
+            if (error.message.toLowerCase().includes("network")) {
+                updateError({state: true, message: "A network error occurred. Check your network and try again."});
+                alert("A network error occurred. Check your network and try again.");
+                return;
+            }
 
-            if (error.status = 401) {
+            if (error.status == 401 && error.response.data.detail.toLowerCase().includes("session")) {
                 // Session has expired, Redirect to the login page
                 localStorage.removeItem("token");
                 localStorage.removeItem("student_token");
@@ -353,15 +362,15 @@ function Admin_dashboard() {
     }
 
     return (
-        <main className="">
+        <main className="min-h-screen dark:bg-gray-900 dark:text-gray-400">
             <Alert message={alertMessage} show={showAlert} closeAlert={() => {
                 updateShowAlert(prev => !prev); 
                 localStorage.removeItem("token"); 
                 router.push("/#login");
             }}/>
             <Modal show={classStarted} modalClosed= {() => classCancelledHandler}>
-                <div className="flex flex-col items-center justify-center w-full h-full py-4 md:py-6 px-6 md:px-10 gap-5 rounded">
-                    <h1 className="text-2xl font-bold text-center">Create Geofence.</h1>
+                <div className="flex flex-col items-center justify-center w-full h-full py-4 md:py-6 px-6 md:px-10 gap-5 rounded dark:bg-gray-800 dark:p-10 dark:text-gray-400">
+                    <h1 className="text-2xl font-bold text-center dark:text-gray-300">Create Geofence.</h1>
 
                     <p className="text-center text-gray-500">Your class code would be generated</p>
                     {/* <p className="text-center text-gray-500">Your class code is <span className="font-bold">{code}</span></p> */}
@@ -383,7 +392,7 @@ function Admin_dashboard() {
                         {/* <input type="time" name="start_time" id="start_time" min={getMinTime()} max={"22:00"}
                         className="input w-[130%] text-gray-500" placeholder="Select start time" onChange={(e) => handleChange(e)} onBlur={(e) => handleChange(e)}/> */}
 
-                        {!isTimeInputValid ? <p className="text-sm text-red-500">Enter a valid time</p>: ""}
+                        {!isTimeInputValid ? <p className="text-sm text-red-500 dark:text-red-400 dark:font-extrabold">Enter a valid time</p>: ""}
                         
                         <select name="duration" defaultValue={30} onChange = {(e) => handleChange(e)} onBlur={(e) => handleChange(e)} id="duration" 
                         className="input w-[130%] text-gray-500" aria-placeholder="Select class duration.">
@@ -396,7 +405,7 @@ function Admin_dashboard() {
                     </form>
 
                     { error.state && !loading? 
-                        <div className=" text-sm text-center font-bold text-red-500">{error.message}</div>
+                        <div className=" text-sm text-center font-bold text-red-500 dark:text-red-500 dark:font-extrabold">{error.message}</div>
                         : ""   
                     }
 
@@ -414,8 +423,8 @@ function Admin_dashboard() {
             {/* admin navigations */}q
             {/* LOGOUT MODAL */}
             <OpenModal hidden = {!showLogoutModal}>
-                <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm'>
-                    <h1 className='font-bold text-xl text-gray-700 text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
+                <div className='flex flex-col p-8 px-2 rounded gap-12 md:gap-16 text-sm dark:bg-gray-800 dark:text-gray-300'>
+                    <h1 className='font-bold text-xl text-gray-700 text-center sm:text-2xl md:text-4xl dark:text-gray-400'>Are you sure you want to log out?</h1>
                     <div className={`flex gap-3 justify-center w-full md:scale-125 ${logoutError.state && "flex-col sm:px-6"} ${logoutLoading && logoutError.state? "items-center": ""}`}>
                         {logoutError.state && <div className="text-red-500 text-center self-center font-bold text-sm">{logoutError.message}</div>}
                         {logoutLoading ? Spinner: (<><button 
@@ -437,14 +446,15 @@ function Admin_dashboard() {
             <AuthenticatedNav handleLogout={() => updateShowLogoutModal(true)}/>
             
 
-            <div id="topSection" className="flex items-center flex-col justify-center mt-20 gap-16 my-6">
+            <div id="topSection" className="flex items-center flex-col justify-center mt-20 gap-16 my-6 dark:bg-gray-900">
                 {/* Input first name from backend */}
-                <div><span className="font-bold">Long:</span> {location.longitude}, <span className="font-bold">Lat:</span> {location.latitude}</div>
+                <div className="dark:text-gray-400"><span className="font-bold">Long:</span> {location.longitude}, <span className="font-bold">Lat:</span> {location.latitude}</div>
 
                 <div id="left-of-section" className="flex flex-col gap-5 mx-10">
                     <div className="flex gap-2 items-center justify-center">
-                        <h1 className="text-3xl font-bold dark:text-neutral-300">Hello there, <span className="text-purple-700 pl-1">{username}</span>.</h1>
-                        <Image src= "/pngwing.com.png" width={"34"} height={"34"} alt="crown"/>
+                        <h1 className="text-3xl font-bold dark:text-gray-300">Hello there, <span className="text-purple-700 pl-1">{username}</span>.</h1>
+                        <Image src= "/pngwing.com.png" className="dark:hidden" width={"34"} height={"34"} alt="crown"/>
+                        <Image src= "/crown-darkmode.svg" className="hidden dark:inline-block" width={"55"} height={"55"} alt="crown"/>
                     </div>
 
                     <h3>You&apos;re an admin! don&apos;t know what to do?</h3>
@@ -462,7 +472,7 @@ function Admin_dashboard() {
 
             <div id="Class_and_past_attendance" className="flex flex-col items-center justify-center my-10 mx-auto gap-4">
                 <button 
-                    className="w-[70%] bg-purple-700 py-2 rounded text-white hover-effect hover:scale-105"
+                    className="w-[70%] bg-purple-700 py-2 rounded text-white hover-effect hover:scale-105 dark:bg-purple-800 dark:text-gray-200"
                     onClick={(e) => updateClassStarted(true)}
                 >
                     Start a class.
@@ -475,7 +485,7 @@ function Admin_dashboard() {
                 </button>
             </div>
             
-            <div id="classes_created_by_admin" className="px-6">
+            <div id="classes_created_by_admin" className="px-6 dark:text-gray-300">
                 {geofences.length !== 0 ? <h1 className="text-center py-2 font-bold">These are your created classes.</h1>: ""}
 
                 {loadingActiveClasses 
@@ -487,18 +497,19 @@ function Admin_dashboard() {
                                 className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%]'
                             >
                                 <div id='top-geofence-card' className='flex justify-between items-center'>
-                                    <Image src='/classroom.svg' className='rounded-full' width={50} height={50} alt="class-room-vector"/>
+                                    <Image src='/classroom.svg' className='rounded-full dark:hidden' width={50} height={50} alt="class-room-vector"/>
+                                    <Image src='/class-darkmode.svg' className='rounded-full hidden dark:inline-block' width={50} height={50} alt="class-room-vector"/>
                                     <span className='font-bold text-purple-500 text-sm sm:text-base'>{geofence.name}</span>
                                 </div>
                                 <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3'>
                                     <span>{`${parseInt(geofence.start_time.slice(11,16).split(":")[0]) + 1}:${geofence.start_time.slice(11,16).split(":")[1]}`}</span>
                                     <div id='active-status-geofence-card' className='flex justify-center gap-1 items-center sm:gap-2'>
-                                        <span className={`w-[10px] h-[10px] rounded-full 
+                                        <span className={`w-[10px] h-[10px] rounded-full self-center
                                             ${geofence.status == "active"? "bg-green-500 text-green-500" 
                                                 :(geofence.status == "scheduled"? "bg-yellow-500 text-yellow-500" : "bg-red-500 text-red-500")}`}
                                         ></span>
                                         {/** red or green dot depending on active status*/}
-                                        <span className="text-sm">{geofence.status === 'active' ? 'Active' : geofence.status === 'scheduled' ? 'Scheduled' : 'Inactive'}</span>
+                                        <span className="text-sm self-center">{geofence.status === 'active' ? 'Active' : geofence.status === 'scheduled' ? 'Scheduled' : 'Inactive'}</span>
                                     </div>
                                 </div>
                             </div>

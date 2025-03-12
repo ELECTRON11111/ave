@@ -1,5 +1,5 @@
 "use client";
-import React, {useState} from 'react';
+import React, {useState, useContext} from 'react';
 
 const AuthenticatedNav = (props: {handleLogout: () => void}) => {
     const [darkModeState, setDarkModeState] = useState(false);
