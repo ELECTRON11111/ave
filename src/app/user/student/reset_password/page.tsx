@@ -75,7 +75,7 @@ const Spinner = (
             if (error.status = 401) {
                 // Session has expired, Redirect to the login page
                 localStorage.removeItem("token");
-                localStorage.removeItem("admin_token");
+                localStorage.removeItem("student_token");
 
                 router.push("/");
             }

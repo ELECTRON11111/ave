@@ -63,10 +63,10 @@ const Page = () => {
                 return;
             }
 
-            if (error.status = 401) {
+            if (error.status == 401 && error.response.data.detail.toLowerCase().includes("session")) {
                 // Session has expired, Redirect to the login page
                 localStorage.removeItem("token");
-                localStorage.removeItem("admin_token");
+                localStorage.removeItem("student_token");
 
                 router.push("/");
             }
