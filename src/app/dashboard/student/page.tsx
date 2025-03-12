@@ -3,7 +3,6 @@ import React, { ChangeEvent } from 'react';
 import { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import axios from 'axios';
-import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';    
 import Modal from '@/components/Model/Model';
 import Alert from '@/components/Alert/Alert';
@@ -364,7 +363,7 @@ const Page = () => {
     
 
     return (
-        <div id='Student-dashboard-page' className='p-4 flex font-body flex-col py-16'>
+        <div id='Student-dashboard-page' className='p-4 flex font-body flex-col py-16 min-h-screen dark:bg-gray-900 dark:text-gray-400'>
             <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(false); localStorage.removeItem("student_token"); router.push("/#login")}}/>
             <Modal show={showModal} modalClosed= {() => updateShowModal(false)}>     
                 {confirmButtonClicked == false && selectedGeofenceData.status === "active"
@@ -423,8 +422,8 @@ const Page = () => {
 
             {/* LOGOUT MODAL */}
             <OpenModal hidden = {!showLogoutModal}>
-                <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm'>
-                    <h1 className='font-bold text-xl text-gray-700 text-center sm:text-2xl md:text-4xl'>Are you sure you want to log out?</h1>
+                <div className='flex flex-col p-8 px-2 gap-12 md:gap-16 text-sm dark:bg-gray-800 dark:text-gray-300'>
+                    <h1 className='font-bold text-xl text-gray-700 text-center sm:text-2xl md:text-4xl dark:text-gray-400'>Are you sure you want to log out?</h1>
                     <div className={`flex gap-3 justify-center w-full md:scale-125 ${logoutError.state && "flex-col sm:px-6"} ${logoutLoading && logoutError.state? "items-center": ""}`}>
                         {logoutError.state && <div className="text-red-500 text-center self-center font-bold text-sm">{logoutError.message}</div>}
                         {logoutLoading ? Spinner: (<><button 
@@ -444,27 +443,27 @@ const Page = () => {
             </OpenModal>
 
             <AuthenticatedNav handleLogout={() => updateShowLogoutModal(true)}/>
-            <Image src="/students.svg" alt ="students svg" width={200} height={200} className='self-center'/>
+            <Image src="/students.svg" alt ="students svg" width={200} height={200} className='pt-4 self-center'/>
     
-            <h1 className='text-center text-4xl font-bold text-[#313131] font-playwrite py-2'>Student Dashboard</h1>
+            <h1 className='text-center text-4xl font-bold text-[#313131] font-playwrite py-2 dark:text-gray-300'>Student Dashboard</h1>
             <h3 className='text-center py-4'>Hello <span className='text-purple-500'>{username}</span>, join your class.</h3>
             <button 
                 onClick={getGeofencesHandler}
                 className='py-2 px-6 w-full text white border border-white my-3 rounded-lg text-white bg-purple-500
-                transition ease-out duration-300 hover:bg-purple-800'
+                transition ease-out duration-300 hover:bg-purple-800 dark:bg-purple-700 dark:hover:bg-purple-800'
             >
                 Refresh List
             </button>
             <input type='text' 
                 className='py-2 px-6 w-full border border-purple-500 my-3 rounded-lg text-black bg-white
-                transition ease-out duration-300 hover:border-2'
+                transition ease-out duration-300 hover:border-2 dark:bg-gray-900 dark:text-gray-200 dark:border-2'
                 placeholder='Search for a class.'
                 onChange={(e: any) => geofenceSearchHandler(e)}
                 onBlur={(e: any) => geofenceSearchHandler(e)}
             />
 
-            <h3 className='border-b-2 w-full px-4 my-6'>All available classes</h3>
-            <div className='flex justify-center items-center w-full'>
+            <h3 className='border-b-2 w-full px-4 my-6 dark:text-gray-300'>All available classes</h3>
+            <div className='flex justify-center items-center w-full dark:text-gray-300'>
                 {loading 
                     ? Spinner
                     : (<div id='fences_list' className='w-full relative grid grid-cols-2 gap-4 md:grid-cols-4'>
@@ -474,7 +473,8 @@ const Page = () => {
                                 className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%]'
                             >
                                 <div id='top-geofence-card' className='flex justify-between items-center'>
-                                    <Image src='/classroom.svg' className='rounded-full' alt='classroom vector' width={50} height={50}/>
+                                    <Image src='/classroom.svg' className='rounded-full dark:hidden' width={50} height={50} alt="class-room-vector"/>
+                                    <Image src='/class-darkmode.svg' className='rounded-full hidden dark:inline-block' width={50} height={50} alt="class-room-vector"/>
                                     <span className='font-bold text-purple-500 text-sm sm:text-base'>{geofence.name}</span>
                                 </div>
                                 <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3'>
