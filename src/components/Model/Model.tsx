@@ -10,7 +10,7 @@ function Modal(props: {show: boolean, modalClosed: () => void, children: ReactEl
                     opacity: props.show? "1": "0"
                 }}
             >
-                <div className="p-6 bg-white rounded-lg dark:p-2 dark:bg-gray-900">{props.children}</div>
+                <div className="p-6 bg-white rounded-lg dark:p-4 dark:bg-gray-900">{props.children}</div>
             </div>
         </>
     )

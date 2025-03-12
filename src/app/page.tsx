@@ -138,16 +138,16 @@ export default function Home () {
   }
 
   return (
-    <div id="login" className="w-full bg-white p-4 py-8 md:flex md:flex-col md:justify-center md:px-60 md:pb-16">
+    <div id="login" className="w-full bg-white p-4 py-8 min-h-screen md:flex md:flex-col md:justify-center md:px-60 md:pb-16 dark:bg-gray-900">
       <Modal show={showDisclaimer} modalClosed= {() => updateShowDisclaimer(false)}>
-        <div className="flex flex-col gap-4">
-          <h1 className="text-center font-extrabold">Important notice!</h1>
+        <div className="flex flex-col gap-4 dark:bg-gray-800 dark:text-gray-300 dark:p-4 dark:py-6 dark:rounded">
+          <h1 className="text-center font-extrabold dark:text-gray-300">Important notice!</h1>
           <ul className="flex flex-col gap-2 text-sm sm:text-base">
             <li>1. This site is more optimized to mobile</li>
             <li>2. Consider switching to mobile for better accuracy</li>
           </ul>
           <button 
-            className="w-full py-2 px-auto bg-purple-500 text-center text-white rounded-lg hover:bg-purple-700" 
+            className="w-full py-2 px-auto bg-purple-500 text-center text-white rounded-lg hover:bg-purple-700 dark:text-gray-100 dark:bg-purple-700 dark:hover:bg-purple-800" 
             onClick={() => updateShowDisclaimer(false)}
           >
             Ok
@@ -157,11 +157,11 @@ export default function Home () {
 
       <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(prev => !prev); router.push("/#login")}}/>
       <div id="head" className="my-8">
-        <h1 className="my-2 text-3xl font-extrabold md:text-center">Login to AVE.</h1>
+        <h1 className="my-2 text-3xl font-extrabold md:text-center dark:text-gray-300">Login to AVE.</h1>
         <h1 className="text-purple-600 md:text-center">Enter your Login details.</h1>
-        <div id="links" className="m-4 flex justify-around">
-          <span className={`border-b-2 p-2 cursor-pointer select-none ${isStudent? "border-b-purple-500": ""}`} onClick={() => changeIsStudent(true)}>Student</span>
-          <span className={`border-b-2 p-2 cursor-pointer select-none ${!isStudent? "border-b-purple-500": ""}`} onClick={() => changeIsStudent(false)}>Admin (Lecturer)</span>
+        <div id="links" className="m-4 flex justify-around dark:text-gray-400">
+          <span className={`border-b-2 p-2 cursor-pointer select-none ${isStudent? "border-b-purple-500": ""} `} onClick={() => changeIsStudent(true)}>Student</span>
+          <span className={`border-b-2 p-2 cursor-pointer select-none ${!isStudent? "border-b-purple-500": ""} `} onClick={() => changeIsStudent(false)}>Admin (Lecturer)</span>
         </div>
       </div>
       
@@ -175,14 +175,14 @@ export default function Home () {
           type="submit" 
           disabled={submitDisabled}
           onClick={sendFormData}
-          className="my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg disabled:opacity-50"
+          className="my-4 p-2 w-full bg-purple-600 rounded text-white transition duration-300 ease-out hover:shadow-lg disabled:opacity-50 dark:bg-purple-700 dark:hover:bg-purple-800 dark:text-gray-100"
         >
           {loading? Spinner: "Login"}
         </button>
       </form>
 
-      <p className="my-2 text-md">Don&apos;t have an account? <Link href={"/signup"} className="font-light underline">   Sign Up</Link></p>
-      <p className="my-2 text-md">Forgotten Password? <Link href={"/forgot-password"} className="font-light underline">   Reset Password</Link></p>
+      <p className="my-2 text-md dark:text-gray-400">Don&apos;t have an account? <Link href={"/signup"} className="font-light underline">   Sign Up</Link></p>
+      <p className="my-2 text-md dark:text-gray-400">Forgotten Password? <Link href={"/forgot-password"} className="font-light underline">   Reset Password</Link></p>
     </div>
   )
 }
