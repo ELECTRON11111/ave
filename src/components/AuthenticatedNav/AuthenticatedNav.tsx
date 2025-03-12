@@ -7,11 +7,14 @@ const AuthenticatedNav = (props: {handleLogout: () => void}) => {
         document.body.classList.toggle("dark");
         setDarkModeState(!darkModeState);
     }
-
+    
     useEffect(() => {
         // determine if body has dark class
         const containsDarkClass = document.body.classList.contains("dark");
         containsDarkClass? setDarkModeState(true): setDarkModeState(false);
+        
+        // save state to localStorage
+        localStorage.setItem("darkMode", JSON.stringify(darkModeState));
     }, [darkModeState]);
 
     return (

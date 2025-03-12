@@ -41,6 +41,16 @@ export default function Home () {
   )
 
   useEffect(() => {
+    // set preferred theme
+    const darkModeFromLocalStorage = localStorage.getItem("darkMode");
+    if (darkModeFromLocalStorage != undefined) {
+      JSON.parse(darkModeFromLocalStorage)? document.body.classList.add("dark"): document.body.classList.remove("dark");
+    } else {
+      const isDarkModeOn = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+      isDarkModeOn ? document.body.classList.add('dark'): document.body.classList.remove('dark');
+    }
+
+    // check for user tokens
     const admin_token = localStorage.getItem("token");
     const student_token = localStorage.getItem("student_token");
 
