@@ -154,10 +154,10 @@ const Page = () => {
 
             console.log(geofences);
 
-            if (error.status == 401 && error.message != "Network Error") {
+            if (error.status == 401 && (error.message != "Network Error" || error.response.data.detail.toLowerCase().includes("session"))) {
                 // Session has expired, Redirect to the login page
                 localStorage.removeItem("token");
-                localStorage.removeItem("admin_token");
+                localStorage.removeItem("student_token");
 
                 router.push("/");
             }
@@ -235,7 +235,7 @@ const Page = () => {
                 return;
             }
 
-            if (error.status == 401 && error.message.toLowerCase().includes("session")) {
+            if (error.status == 401 && (error.message.toLowerCase().includes("session") || error.message.toLowerCase().includes("unauthorized"))) {
                 // Session has expired, Redirect to the login page
                 localStorage.removeItem("token");
                 localStorage.removeItem("admin_token");
