@@ -1,5 +1,5 @@
 "use client";
-import React, {useState, useContext} from 'react';
+import React, {useState, useEffect} from 'react';
 
 const AuthenticatedNav = (props: {handleLogout: () => void}) => {
     const [darkModeState, setDarkModeState] = useState(false);
@@ -7,6 +7,12 @@ const AuthenticatedNav = (props: {handleLogout: () => void}) => {
         document.body.classList.toggle("dark");
         setDarkModeState(!darkModeState);
     }
+
+    useEffect(() => {
+        // determine if body has dark class
+        const containsDarkClass = document.body.classList.contains("dark");
+        containsDarkClass? setDarkModeState(true): setDarkModeState(false);
+    }, [darkModeState]);
 
     return (
         <div className="AuthenticatedNav w-full flex justify-between bg-gray-50 fixed z-50 top-0 left-0 p-4 sm:px-8 shadow-sm dark:bg-gray-900">
