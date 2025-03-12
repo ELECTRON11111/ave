@@ -178,9 +178,9 @@ const Page = () => {
      
 
     return (
-        <div className='flex px-6 py-6 flex-col gap-4'>
+        <div className='flex px-6 py-6 flex-col gap-4 min-h-screen dark:bg-gray-900 dark:text-gray-400'>
             <Alert message={alertMessage} show={showAlert} closeAlert={() => {updateShowAlert(prev => !prev); router.push("/#login")}}/>
-            <h1 className='text-4xl font-extrabold text-center'>{classData.name}</h1>
+            <h1 className='text-4xl font-extrabold text-center dark:text-gray-300'>{classData.name}</h1>
             <h2 className='text-xl text-gray-500 text-center'>
                 Your class code is <span className='font-bold'>{classData.Code}</span>
                 <br /><span className='text-sm sm:text-base'>(Share this code with all students of this class)</span>
@@ -190,15 +190,15 @@ const Page = () => {
                 <button 
                     onClick={getAttendanceHandler}
                     className='py-2 px-6 w-full text white border border-white my-3 rounded text-white bg-purple-500
-                transition ease-out duration-300 hover:bg-purple-800'>
+                transition ease-out duration-300 hover:bg-purple-800 dark:bg-purple-700 dark:hover:bg-purple-800 dark:text-gray-200 dark:border-gray-400'>
                     Refresh List
                 </button>
                 {/* Manual de-activate geofence */}
                 <div className='flex justify-between'>
                     <button 
                         onClick={endClassHandler}
-                        className='py-2 px-6 w-[90%] border border-purple-500 my-3 text-red bg-white
-                        transition ease-out duration-300 hover:bg-red-600 hover:text-white disabled:bg-red-500 disabled:opacity-75 disabled:text-white'
+                        className='py-2 px-6 w-[90%] border border-purple-500 my-3 text-red bg-white transition ease-out duration-300 hover:bg-red-600
+                        hover:text-white disabled:bg-red-500 disabled:opacity-75 disabled:text-white dark:bg-gray-400 dark:text-gray-100 dark:hover:bg-red-700 dark:hover:text-white'
                         disabled={!classData.active}
                     >
                         {endClassLoading? Spinner :(classData.active? "End Class": "Class is inactive")}
@@ -208,7 +208,13 @@ const Page = () => {
                         title='Download Attendance' 
                         onClick={downloadCSV}
                     >
-                        <Image src="/download-svg.svg" width={30} height={3} alt='Download Image' />
+                        {/* Icon for lightmode */}
+                        <Image src="/download-svg.svg" className='dark:hidden' width={30} height={3} alt='Download Image' />
+
+                        {/* Icon for darkmode */}
+                        <svg xmlns="http://www.w3.org/2000/svg" className="hidden size-8 dark:inline-block" fill="#11111" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" >
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M9 8.25H7.5a2.25 2.25 0 0 0-2.25 2.25v9a2.25 2.25 0 0 0 2.25 2.25h9a2.25 2.25 0 0 0 2.25-2.25v-9a2.25 2.25 0 0 0-2.25-2.25H15M9 12l3 3m0 0 3-3m-3 3V2.25" />
+                        </svg>
                     </button>
                 </div>
 
