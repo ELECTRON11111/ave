@@ -457,7 +457,7 @@ function Admin_dashboard() {
                         <Image src= "/crown-darkmode.svg" className="hidden dark:inline-block" width={"55"} height={"55"} alt="crown"/>
                     </div>
 
-                    <h3>You&apos;re an admin! don&apos;t know what to do?</h3>
+                    <h3>You&apos;re an admin! Don&apos;t know what to do?</h3>
 
                     <ul className="list-disc">
                         <li>Start a class.</li>
@@ -499,7 +499,7 @@ function Admin_dashboard() {
                                 <div id='top-geofence-card' className='flex justify-between items-center'>
                                     <Image src='/classroom-x.svg' className='rounded-full dark:hidden' width={50} height={50} alt="class-room-vector"/>
                                     <Image src='/class-darkmode-x.svg' className='rounded-full hidden dark:inline-block' width={50} height={50} alt="class-room-vector"/>
-                                    <span className='font-bold text-purple-500 text-sm sm:text-base dark:text-purple-700'>{geofence.name}</span>
+                                    <span className='font-bold text-purple-500 text-sm sm:text-base dark:text-gray-400'>{geofence.name}</span>
                                 </div>
                                 <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3 dark:border-purple-700'>
                                     <span>{`${parseInt(geofence.start_time.slice(11,16).split(":")[0]) + 1}:${geofence.start_time.slice(11,16).split(":")[1]}`}</span>

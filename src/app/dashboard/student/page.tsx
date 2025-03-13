@@ -475,7 +475,7 @@ const Page = () => {
                                 <div id='top-geofence-card' className='flex justify-between items-center'>
                                     <Image src='/classroom.svg' className='rounded-full dark:hidden' width={50} height={50} alt="class-room-vector"/>
                                     <Image src='/class-darkmode.svg' className='rounded-full hidden dark:inline-block' width={50} height={50} alt="class-room-vector"/>
-                                    <span className='font-bold text-purple-500 text-sm sm:text-base dark:text-purple-700'>{geofence.name}</span>
+                                    <span className='font-bold text-purple-500 text-sm sm:text-base dark:text-gray-400'>{geofence.name}</span>
                                 </div>
                                 <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3 dark:border-purple-700'>
                                     {/* <span>{geofence.creator.split(" ").length == 1? geofence.creator.split(" ")[0] :geofence.creator.split(" ")[1]}</span> */}
