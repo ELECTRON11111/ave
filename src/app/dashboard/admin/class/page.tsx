@@ -198,7 +198,7 @@ const Page = () => {
                     <button 
                         onClick={endClassHandler}
                         className='py-2 px-6 w-[90%] border border-purple-500 my-3 text-red bg-white transition ease-out duration-300 hover:bg-red-600
-                        hover:text-white disabled:bg-red-500 disabled:opacity-75 disabled:text-white dark:bg-gray-400 dark:text-gray-100 dark:hover:bg-red-700 dark:hover:text-white'
+                        hover:text-white disabled:bg-red-500 disabled:opacity-75 disabled:text-white dark:bg-red-600 dark:text-gray-100 dark:hover:bg-red-700 dark:hover:text-white'
                         disabled={!classData.active}
                     >
                         {endClassLoading? Spinner :(classData.active? "End Class": "Class is inactive")}

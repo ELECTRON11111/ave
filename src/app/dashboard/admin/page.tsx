@@ -452,7 +452,7 @@ function Admin_dashboard() {
 
                 <div id="left-of-section" className="flex flex-col gap-5 mx-10">
                     <div className="flex gap-2 items-center justify-center">
-                        <h1 className="text-3xl font-bold dark:text-gray-300">Hello there, <span className="text-purple-700 font-playwrite pl-1 dark:text-purple-800">{username}</span>.</h1>
+                        <h1 className="text-3xl font-bold dark:text-gray-300">Hello there, <span className="text-purple-700 pl-1 dark:text-purple-800">{username}</span>.</h1>
                         <Image src= "/pngwing.com.png" className="dark:hidden" width={"34"} height={"34"} alt="crown"/>
                         <Image src= "/crown-darkmode.svg" className="hidden dark:inline-block" width={"55"} height={"55"} alt="crown"/>
                     </div>
@@ -479,7 +479,7 @@ function Admin_dashboard() {
                 </button>
                 <button 
                     onClick={(e) => {getClassesCreatedByMe()}}
-                    className="w-[70%] border-2 border-purple-700 py-2 bg-inherit rounded text-purple-700 hover-effect hover:scale-105"
+                    className="w-[70%] border-2 border-purple-700 py-2 bg-inherit rounded text-gray-100 hover-effect hover:scale-105"
                 >
                     Get your classes.
                 </button>
