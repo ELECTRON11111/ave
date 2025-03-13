@@ -5,7 +5,7 @@
 @tailwind utilities;
 
 * {
-  @apply transition-colors duration-100 dark:bg-gray-900
+  @apply transition-colors duration-100
 }
 
 .input {

@@ -466,7 +466,7 @@ const Page = () => {
             <div className='flex justify-center items-center w-full dark:text-gray-400'>
                 {loading 
                     ? Spinner
-                    : (<div id='fences_list' className='w-full relative grid grid-cols-2 gap-4 md:grid-cols-4'>
+                    : (<div id='fences_list' className='w-full relative grid grid-cols-2 gap-4 md:grid-cols-4 dark:min-h-[50vh]'>
                         {typeof(geofences) !== "undefined" && geofences.length !== 0 ? geofences.map((geofence:any, index) => (
                             <div key={index} 
                                 onClick={() => handleGeofenceClicked(geofence)}  // record attendance when a class card is clicked
@@ -489,7 +489,7 @@ const Page = () => {
                                     </div>
                                 </div>
                             </div>
-                        )): <div className='p-12 text-lg absolute flex flex-col gap-4'>
+                        )): <div className='p-12 text-lg absolute flex flex-col gap-4 dark:min-h-[50vh] dark:bg-gray-900'>
                                 <img src='/sad-girl.svg' />
                                 {networkError?
                                     <h3 className='font-bold text-red-500 text-sm text-center'>There was a network error. <br /> Check your connection and try again.</h3>
