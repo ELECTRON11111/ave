@@ -452,7 +452,7 @@ function Admin_dashboard() {
 
                 <div id="left-of-section" className="flex flex-col gap-5 mx-10">
                     <div className="flex gap-2 items-center justify-center">
-                        <h1 className="text-3xl font-bold dark:text-gray-300">Hello there, <span className="text-purple-700 pl-1">{username}</span>.</h1>
+                        <h1 className="text-3xl font-bold dark:text-gray-300">Hello there, <span className="text-purple-700 font-playwrite pl-1 dark:text-purple-800">{username}</span>.</h1>
                         <Image src= "/pngwing.com.png" className="dark:hidden" width={"34"} height={"34"} alt="crown"/>
                         <Image src= "/crown-darkmode.svg" className="hidden dark:inline-block" width={"55"} height={"55"} alt="crown"/>
                     </div>
@@ -472,7 +472,7 @@ function Admin_dashboard() {
 
             <div id="Class_and_past_attendance" className="flex flex-col items-center justify-center my-10 mx-auto gap-4">
                 <button 
-                    className="w-[70%] bg-purple-700 py-2 rounded text-white hover-effect hover:scale-105 dark:bg-purple-800 dark:text-gray-200"
+                    className="w-[70%] bg-purple-700 py-2 rounded text-white hover-effect hover:scale-105 dark:bg-purple-800 dark:text-gray-300"
                     onClick={(e) => updateClassStarted(true)}
                 >
                     Start a class.
@@ -490,18 +490,18 @@ function Admin_dashboard() {
 
                 {loadingActiveClasses 
                     ? (<div className="w-full flex justify-center py-10">{Spinner}</div>)
-                    : (<div id='fences_list' className='w-full grid grid-cols-2 gap-4 sm:grid-cols-4'>
+                    : (<div id='fences_list' className='w-full grid grid-cols-2 gap-4 sm:grid-cols-4 dark:text-gray-400'>
                         {geofencesByThisAdmin.length !== 0 ? geofencesByThisAdmin.map((geofence:any, index) => (
                             <div key={index} 
                                 onClick={(e):any => classRecordClicked(e, geofence)}  // record attendance when a class card is clicked
-                                className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%]'
+                                className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%] dark:border-purple-700'
                             >
                                 <div id='top-geofence-card' className='flex justify-between items-center'>
-                                    <Image src='/classroom.svg' className='rounded-full dark:hidden' width={50} height={50} alt="class-room-vector"/>
-                                    <Image src='/class-darkmode.svg' className='rounded-full hidden dark:inline-block' width={50} height={50} alt="class-room-vector"/>
-                                    <span className='font-bold text-purple-500 text-sm sm:text-base'>{geofence.name}</span>
+                                    <Image src='/classroom-x.svg' className='rounded-full dark:hidden' width={50} height={50} alt="class-room-vector"/>
+                                    <Image src='/class-darkmode-x.svg' className='rounded-full hidden dark:inline-block' width={50} height={50} alt="class-room-vector"/>
+                                    <span className='font-bold text-purple-500 text-sm sm:text-base dark:text-purple-700'>{geofence.name}</span>
                                 </div>
-                                <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3'>
+                                <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3 dark:border-purple-700'>
                                     <span>{`${parseInt(geofence.start_time.slice(11,16).split(":")[0]) + 1}:${geofence.start_time.slice(11,16).split(":")[1]}`}</span>
                                     <div id='active-status-geofence-card' className='flex justify-center gap-1 items-center sm:gap-2'>
                                         <span className={`w-[10px] h-[10px] rounded-full self-center
@@ -513,7 +513,7 @@ function Admin_dashboard() {
                                     </div>
                                 </div>
                             </div>
-                        )): <div className='py-4 text-lg w-[90vw] flex justify-center text-center'>You have not created any class. <br /> Create one to take your attendace.</div>}
+                        )): <div className='py-4 text-lg w-[90vw] flex justify-center text-center dark:text-gray-400'>You have not created any class. <br /> Create one to take your attendace.</div>}
                     </div>)
                 }
             </div>
