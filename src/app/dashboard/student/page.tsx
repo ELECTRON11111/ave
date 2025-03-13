@@ -445,12 +445,12 @@ const Page = () => {
             <AuthenticatedNav handleLogout={() => updateShowLogoutModal(true)}/>
             <Image src="/students.svg" alt ="students svg" width={200} height={200} className='pt-4 self-center'/>
     
-            <h1 className='text-center text-4xl font-bold text-[#313131] font-playwrite py-2 dark:text-gray-300'>Student Dashboard</h1>
+            <h1 className='text-center text-4xl text-[#313131] font-playwrite py-2 font-extrabold dark:text-gray-300'>Student Dashboard</h1>
             <h3 className='text-center py-4'>Hello <span className='text-purple-500'>{username}</span>, join your class.</h3>
             <button 
                 onClick={getGeofencesHandler}
                 className='py-2 px-6 w-full text white border border-white my-3 rounded-lg text-white bg-purple-500
-                transition ease-out duration-300 hover:bg-purple-800 dark:bg-purple-700 dark:hover:bg-purple-800'
+                transition ease-out duration-300 hover:bg-purple-800 dark:bg-purple-700 dark:hover:bg-purple-800 dark:border-0 dark:text-gray-200' 
             >
                 Refresh List
             </button>
@@ -462,22 +462,22 @@ const Page = () => {
                 onBlur={(e: any) => geofenceSearchHandler(e)}
             />
 
-            <h3 className='border-b-2 w-full px-4 my-6 dark:text-gray-300'>All available classes</h3>
-            <div className='flex justify-center items-center w-full dark:text-gray-300'>
+            <h3 className='border-b-2 w-full px-4 py-2 my-6 dark:text-gray-400 dark:border-gray-400'>All available classes</h3>
+            <div className='flex justify-center items-center w-full dark:text-gray-400'>
                 {loading 
                     ? Spinner
                     : (<div id='fences_list' className='w-full relative grid grid-cols-2 gap-4 md:grid-cols-4'>
                         {typeof(geofences) !== "undefined" && geofences.length !== 0 ? geofences.map((geofence:any, index) => (
                             <div key={index} 
                                 onClick={() => handleGeofenceClicked(geofence)}  // record attendance when a class card is clicked
-                                className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%]'
+                                className='border-2 border-purple-400 px-2 py-2 rounded-md my-2 cursor-pointer hover-effect hover:scale-[102%] dark:border-purple-700'
                             >
                                 <div id='top-geofence-card' className='flex justify-between items-center'>
                                     <Image src='/classroom.svg' className='rounded-full dark:hidden' width={50} height={50} alt="class-room-vector"/>
                                     <Image src='/class-darkmode.svg' className='rounded-full hidden dark:inline-block' width={50} height={50} alt="class-room-vector"/>
-                                    <span className='font-bold text-purple-500 text-sm sm:text-base'>{geofence.name}</span>
+                                    <span className='font-bold text-purple-500 text-sm sm:text-base dark:text-purple-700'>{geofence.name}</span>
                                 </div>
-                                <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3'>
+                                <div id='bottom-geofence-card' className='flex justify-between py-2 border-t-2 mt-3 dark:border-purple-700'>
                                     {/* <span>{geofence.creator.split(" ").length == 1? geofence.creator.split(" ")[0] :geofence.creator.split(" ")[1]}</span> */}
                                     <div id='active-status-geofence-card' className='flex w-full text-sm gap-2 items-center sm:text-lg'>
                                         <span className={`w-[10px] h-[10px] rounded-full ${geofence.status == "active"? "bg-green-500 text-green-500": (geofence.status == "scheduled"? "bg-yellow-500 text-yellow-500" :"bg-red-500 text-red-500")}`}></span>
@@ -493,7 +493,7 @@ const Page = () => {
                                 <img src='/sad-girl.svg' />
                                 {networkError?
                                     <h3 className='font-bold text-red-500 text-sm text-center'>There was a network error. <br /> Check your connection and try again.</h3>
-                                    :<h3 className='text-sm text-center'>Sorry, there are no active classes at the moment</h3>
+                                    :<h3 className='text-sm text-center dark:text-gray-400'>Sorry, there are no active classes at the moment</h3>
                                 }
                             </div>}
 
