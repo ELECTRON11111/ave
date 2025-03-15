@@ -56,7 +56,7 @@ const Page = () => {
         } catch (error: any) {
             console.log(error);
             updateShowSuccessModal(false);
-            updateError({state: true, message: "Session token expired."});
+            updateError({state: true, message: "Session token has expired."});
 
             if (error.status == 500) {
                 updateError({state: true, message: "An error occured, contact Admin courageadedara@gmail.com"});
