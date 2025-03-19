@@ -96,7 +96,7 @@ const Page = () => {
     }
 
     return (
-        <div id='email-verification-page' className='to-white min-h-screen p-8 py-12 md:flex md:justify-center md:items-center'>
+        <div id='email-verification-page' className='to-white min-h-screen max-w-screen px-2 sm:p-8 py-12 md:flex md:justify-center md:items-center'>
             <div id="container" className='flex flex-col items-center md:border md:rounded md:shadow-inner md:p-8 md:w-fit'>
                 <div className='rounded-full p-4 bg-purple-100 block w-fit'>
                     {/* mail icon */}
@@ -110,7 +110,7 @@ const Page = () => {
                         <p className='text-purple-600 text-sm py-1'>Enter the 6-digit code sent to your email</p>
                     </div>
 
-                    <div id="input-fields" className='flex space-x-2'>
+                    <div id="input-fields" className='flex space-x-2 scale-90 sm:scale-100'>
                         {verificationCode.map((digit: string, index: number) => (
                             <input 
                                 id={`code-${index}`}
@@ -119,7 +119,7 @@ const Page = () => {
                                 inputMode="numeric"
                                 pattern="[0-9]*"
                                 maxLength={1} 
-                                className='digit border border-gray-200 text-purple-900 rounded-md text-lg w-[3.6rem] text-center font-bold p-5 focus:border-purple-500 focus:ring-purple-500 focus:outline-none focus:border-2'
+                                className='digit border border-gray-200 text-purple-900 rounded-md p-2 text-lg w-10 sm:w-[3.6rem] text-center font-bold sm:p-5 focus:border-purple-500 focus:ring-purple-500 focus:outline-none focus:border-2'
                                 onChange={(e:ChangeEvent<HTMLInputElement>) => handleChange(e, index)}
                                 onKeyDown={(e) => handleKeyDown(e, digit, index)}
                                 // value={digit}
