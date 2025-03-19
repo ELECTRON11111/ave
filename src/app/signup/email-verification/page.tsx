@@ -1,8 +1,18 @@
 "use client";
 import React, {ChangeEvent, useState, useEffect} from 'react';
+import { useRouter } from 'next/navigation';
 
 const Page = () => {
     const [verificationCode, updateVerificationCode] = useState(["", "", "", "", "", ""]);
+    const [isFormValid, updateIsFormValid] = useState<boolean>(false);
+    const [loading, setLoading] = useState<boolean>(false);
+    const [verificationStatus, updateVerificationStatus] = useState<"success" | "idle" | "error">("idle");
+
+    const router = useRouter();
+
+    useEffect(() => {
+        verificationCode.join("").length == 6 ? updateIsFormValid(true): updateIsFormValid(false);
+    }, [verificationCode])
 
     const handleChange = (e:ChangeEvent<HTMLInputElement>, index: number) => {
         const code = [...verificationCode];
@@ -51,6 +61,35 @@ const Page = () => {
         }
     }
 
+    const handleVerification = (e: React.MouseEvent) => {
+        e.preventDefault();
+        setLoading(true);
+        const code = [...verificationCode].join("");
+
+        setTimeout(() => {
+            if (code == "123466") {
+                updateVerificationStatus("success");
+
+                // move user to login
+                router.push("/");
+            } else {
+                updateVerificationStatus("error");
+
+                // place focus on last input for user to re-enter code
+                document.getElementById(`code-5`)?.focus();
+            }
+            setLoading(false);
+        }, 3000);
+
+        try {
+
+        } catch (error) {
+
+        } finally {
+            // setLoading(false);
+        }
+    }
+
     return (
         <div id='email-verification-page' className='to-white min-h-screen p-8 py-12 md:flex md:justify-center md:items-center'>
             <div id="container" className='flex flex-col items-center md:border md:rounded md:shadow-inner md:p-8 md:w-fit'>
@@ -84,16 +123,16 @@ const Page = () => {
                         ))}
                     </div>
                     
-                    {false ? // check if a response has returned
-                        false? <p className='text-red-500 font-bold text-center py-4'>An Error has occured. Please try again.</p> // based on response success or error
-                        : <p className='text-green-500 font-bold text-center py-4'>Your email had been successfully verified.</p>
+                    {!loading && verificationStatus !== "idle" ? // check if a response has returned
+                        (verificationStatus == "error"? <p className='text-red-500 font-bold text-center py-4 pt-6'>An Error has occured. Please try again.</p> // based on response success or error
+                        : <p className='text-green-500 font-bold text-center py-4 pt-6'>Your email has been successfully verified.</p>)
                         : ""
                     }
 
                     <p className='text-purple-600 text-center py-4'>Didn&apos;t receive a code? <span className='text-purple-900 cursor-pointer'>Resend</span></p>
 
-                    <button className='py-3 px-4 w-full text-center font-bold bg-purple-500 cursor-pointer text-white rounded-lg my-4 disabled:opacity-50' disabled={true}>
-                        Verify Email
+                    <button className='py-3 px-4 w-full text-center font-bold bg-purple-500 cursor-pointer text-white rounded-lg my-4 disabled:opacity-50' disabled={!isFormValid || loading} onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleVerification(e)}>
+                        {loading? "Verifying ...": "Verify Email"}
                     </button>
                 </form>
             </div>
