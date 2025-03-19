@@ -1,16 +1,55 @@
 "use client";
-import React, {ChangeEvent, useState} from 'react';
+import React, {ChangeEvent, useState, useEffect} from 'react';
 import { Mail } from "lucide-react";
 
 const Page = () => {
     const [verificationCode, updateVerificationCode] = useState(["", "", "", "", "", ""]);
 
-    const handleChange = (e:ChangeEvent, digit:string, index: number) => {
-        // validate input - only allow numbers
+    const handleChange = (e:ChangeEvent<HTMLInputElement>, index: number) => {
+        const code = [...verificationCode];
+        const value = e.target.value;
+        
+        if (isNaN(parseInt(value))) {
+            // not a number
+            code[index] = "";
+            updateVerificationCode(code);
+            e.target.value = "";
+            
+            return;
+        } else {
+            // a number
+            code[index] = value;
+            updateVerificationCode(code);
+            e.target.value = value;
+
+            // move to next input element
+            const nextInput = document.getElementById(`code-${index + 1}`);
+            nextInput && nextInput.focus();
+        }
     }
 
     const handleKeyDown = (e: any, digit: string, index: number) => {
+        if (e.key == "Backspace" && index != 0) {
+            // empty the current input (done by default - change event) and focus on the previous
+            const previousInput = document.getElementById(`code-${index - 1}`);
+            previousInput && previousInput.focus();
 
+            // manually removing content
+            const code = [...verificationCode];
+            code[index] = "";
+            e.target.value = "";
+            updateVerificationCode(code);
+        }
+
+        if (e.key == "ArrowRight") {
+            const nextInput = index == 5? document.getElementById(`code-${0}`): document.getElementById(`code-${index + 1}`);
+            nextInput && nextInput.focus();
+        }
+
+        if (e.key == "ArrowLeft") {
+            const previousInput = index == 0? document.getElementById(`code-${5}`): document.getElementById(`code-${index - 1}`);
+            previousInput && previousInput.focus();
+        }
     }
 
     return (
@@ -28,13 +67,14 @@ const Page = () => {
                     <div id="input-fields" className='flex space-x-2'>
                         {verificationCode.map((digit: string, index: number) => (
                             <input 
+                                id={`code-${index}`}
                                 key={index}
                                 type="text"
                                 inputMode="numeric"
                                 pattern="[0-9]*"
                                 maxLength={1} 
                                 className='digit border border-gray-200 text-purple-900 rounded-md text-lg w-[3.6rem] text-center font-bold p-5 focus:border-purple-500 focus:ring-purple-500 focus:outline-none focus:border-2'
-                                onChange={(e:ChangeEvent) => handleChange(e, digit, index)}
+                                onChange={(e:ChangeEvent<HTMLInputElement>) => handleChange(e, index)}
                                 onKeyDown={(e) => handleKeyDown(e, digit, index)}
                                 // value={digit}
                                 autoFocus={index === 0} // autofocus on first digit
