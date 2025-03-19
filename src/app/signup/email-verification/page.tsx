@@ -11,7 +11,8 @@ const Page = () => {
     const router = useRouter();
 
     useEffect(() => {
-        verificationCode.join("").length == 6 ? updateIsFormValid(true): updateIsFormValid(false);
+        const code = verificationCode.join("");
+        code.length == 6 ? updateIsFormValid(true): updateIsFormValid(false);
     }, [verificationCode])
 
     const handleChange = (e:ChangeEvent<HTMLInputElement>, index: number) => {
