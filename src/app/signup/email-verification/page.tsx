@@ -88,9 +88,11 @@ const Page = () => {
                         : ""
                     }
 
-                    <p className='text-purple-600 text-center py-4'>Didn't receive a code? <span className='text-purple-900 cursor-pointer'>Resend</span></p>
+                    <p className='text-purple-600 text-center py-4'>Didn&apos;t receive a code? <span className='text-purple-900 cursor-pointer'>Resend</span></p>
 
-                    <button className='py-3 px-4 w-full text-center font-bold bg-purple-500 text-white rounded-lg my-4'>Verify Email</button>
+                    <button className='py-3 px-4 w-full text-center font-bold bg-purple-500 cursor-pointer text-white rounded-lg my-4 disabled:opacity-50' disabled={true}>
+                        Verify Email
+                    </button>
                 </form>
             </div>
         </div>
