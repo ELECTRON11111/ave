@@ -1,6 +1,5 @@
 "use client";
 import React, {ChangeEvent, useState, useEffect} from 'react';
-import { Mail } from "lucide-react";
 
 const Page = () => {
     const [verificationCode, updateVerificationCode] = useState(["", "", "", "", "", ""]);
@@ -56,7 +55,10 @@ const Page = () => {
         <div id='email-verification-page' className='to-white min-h-screen p-8 py-12 md:flex md:justify-center md:items-center'>
             <div id="container" className='flex flex-col items-center md:border md:rounded md:shadow-inner md:p-8 md:w-fit'>
                 <div className='rounded-full p-4 bg-purple-100 block w-fit'>
-                    <Mail className='h-8 w-8 text-purple-500'/>
+                    {/* mail icon */}
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor"     className="size-8 text-purple-700">
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0 0 19.5 4.5h-15a2.25 2.25 0 0 0-2.25 2.25m19.5 0v.243a2.25 2.25 0 0 1-1.07 1.916l-7.5 4.615a2.25 2.25 0 0 1-2.36 0L3.32 8.91a2.25 2.25 0 0 1-1.07-1.916V6.75" />
+                    </svg>
                 </div>
                 <form action="">
                     <div className="py-4 text-center">
