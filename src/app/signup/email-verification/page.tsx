@@ -12,7 +12,11 @@ const Page = () => {
 
     useEffect(() => {
         const code = verificationCode.join("");
-        code.length == 6 ? updateIsFormValid(true): updateIsFormValid(false);
+        if (code.length == 6) {
+            updateIsFormValid(true)
+        } else {
+            updateIsFormValid(false)
+        };
     }, [verificationCode])
 
     const handleChange = (e:ChangeEvent<HTMLInputElement>, index: number) => {
