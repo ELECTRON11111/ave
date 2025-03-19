@@ -23,7 +23,7 @@ const Page = () => {
 
             // move to next input element
             const nextInput = document.getElementById(`code-${index + 1}`);
-            nextInput && nextInput.focus();
+            if (nextInput) nextInput.focus();
         }
     }
 
@@ -31,7 +31,7 @@ const Page = () => {
         if (e.key == "Backspace" && index != 0) {
             // empty the current input (done by default - change event) and focus on the previous
             const previousInput = document.getElementById(`code-${index - 1}`);
-            previousInput && previousInput.focus();
+            if (previousInput) previousInput.focus();
 
             // manually removing content
             const code = [...verificationCode];
@@ -42,12 +42,12 @@ const Page = () => {
 
         if (e.key == "ArrowRight") {
             const nextInput = index == 5? document.getElementById(`code-${0}`): document.getElementById(`code-${index + 1}`);
-            nextInput && nextInput.focus();
+            if (nextInput) nextInput.focus();
         }
 
         if (e.key == "ArrowLeft") {
             const previousInput = index == 0? document.getElementById(`code-${5}`): document.getElementById(`code-${index - 1}`);
-            previousInput && previousInput.focus();
+            if (previousInput) previousInput.focus();
         }
     }
 
